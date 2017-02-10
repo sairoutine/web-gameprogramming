@@ -41,30 +41,121 @@
 ```
 
 TODO:
-**package.json** 
+  **package.json**  
 `npm init` により生成します。申し訳ありませんが、`npm` についての説明は省略します。
-**public/bgm** 
+  **public/bgm**  
 ゲームで使用する BGM ファイルをここに置くことにします。
-**public/image** 
+  **public/image**  
 ゲームで使用する画像ファイルをここに置くことにします。
-**public/sound** 
+  **public/sound**  
 ゲームで使用するSEファイル(効果音)をここに置くことにします。
-**public/js** 
+  **public/js**  
 gulp 及び browserify でビルドされた js をここに置くことにします。
 ゲームは、この js ファイルを使用します。gulp 及び browserify によって自動生成されるので、
 あなたはこのファイルを編集してはいけません。
-**public/index.html** 
+  **public/index.html**  
 ゲームを表示するためのHTMLファイルです。
-**src/js/logic**  
+  **src/js/logic**  
 ゲームのソースコードのうち、ゲームロジックに値するクラスはここに置くことにします。
-**src/js/object** 
+  **src/js/object**  
 ゲームのソースコードのうち、オブジェクト(後述します)に値するクラスはここに置くことにします。
-**src/js/scene** 
+  **src/js/scene**  
 ゲームのソースコードのうち、シーン(後述します)に値するクラスはここに置くことにします。
-**src/js/game.js** 
+  **src/js/game.js**  
 ゲームのソースコードのうち、ゲーム全体を表すクラスである Game クラスを記述するファイルです。
-**src/js/main.js** 
+  **src/js/main.js**  
 ゲームのソースコードのうち、Game クラスの生成及び実行をするファイルです。エントリポイントとも呼びます。
+
 # gulp
+gulp はタスクランナーです。色々なタスクを自動化するために使います。
+今回は、以下のタスクを自動化するために使用します。
+
+* クラス毎に分割したファイルを結合するため
+* コードの修正をするとブラウザをすぐリロードする
+
+上記の2つのタスクは `browserify` と `browser-sync` モジュールを使用して実現します。
+
+`gulp-watch` を使用することで、コードの修正にフックして、
+自動でファイル結合と、ブラウザリロードを行うことにします。
+
 # browserify
+`browserify` とは `require()` 関数を使うためのモジュールです。`require()`とはなんでしょうか。node を利用したことがある人は、既に `require` 関数が用意されているので、使用されたことがある人も多いかもしれません。`require()` とは、他のソースコードを読み込むための関数です。
+
 # browser-sync
+
+# gulp-watch
+
+# gulpfile の作成
+必要な npm モジュールをインストールします。
+```
+npm init
+npm -i browser-sync browserify gulp gulp-notify gulp-plumber gulp-rename gulp-watch run-sequence vinyl-source-stream
+```
+
+下記のgulpfileを用意します。
+```
+'use strict';
+
+// ソース元の対象ファイル
+var source_file = './src/js/main.js';
+// 出力ディレクトリ
+var dist_dir = './public/js/';
+// アプリファイル
+var appjs = 'main.js';
+
+// gulp watch で開く html
+var html_dir = "public";
+var html = "index.html";
+
+var watch      = require('gulp-watch');
+var browserify = require('browserify');
+var gulp       = require('gulp');
+var source     = require('vinyl-source-stream');
+var rename     = require('gulp-rename');
+var plumber    = require('gulp-plumber');
+var runSequence= require('run-sequence');
+var path       = require('path');
+var notify     = require('gulp-notify');
+var browserSync= require('browser-sync').create();
+
+gulp.task('browserify', function() {
+	return browserify(source_file)
+		.bundle()
+		.on('error', function(err){   //ここからエラーだった時の記述
+			// デスクトップ通知
+			var error_handle = notify.onError('<%= error.message %>');
+			error_handle(err);
+			this.emit('end');
+		})
+		.pipe(source(appjs))
+		.pipe(gulp.dest(dist_dir));
+});
+
+gulp.task('reload', function () {
+	return browserSync.reload();
+});
+
+gulp.task('build', function(callback) {
+	return runSequence(
+		'browserify',
+		'reload',
+		callback
+	);
+});
+
+gulp.task('browser-sync', function() {
+	return browserSync.init({
+		server: {
+			baseDir: html_dir,
+			index: html,
+		}
+	});
+});
+
+gulp.task('watch', ['browser-sync'], function() {
+	gulp.watch('src/js/**/*.js', ['build']);
+});
+```
+
+これで `gulp watch` をコマンドライン上で実行することで、gulp の監視タスクが立ち上がます。
+ソースコードの変更があると、自動でファイルの結合とブラウザのリロードを行ってくれます。
