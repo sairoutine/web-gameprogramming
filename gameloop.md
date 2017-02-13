@@ -76,3 +76,74 @@ run();
 描画毎に、前回の実行時との経過時間を計算し、16.6ms 以内に処理が収まってなければ、
 次の実行時に複数回実行することで、処理を追いつかせています。
 
+# Canvas
+Canvas を使って、試しに描画してみましょう。
+`public/index.html`
+```
+<html>
+	<canvas id="mainCanvas" width="640" height="480"></canvas>
+</html>
+```
+
+index.html に `canvas` タグを追加します。ここにゲーム内容を描画します。`canvas` タグの id 属性は `mainCanvas` です。あとで JavaScript 側から Canvas の DOM を取得する際に使用します。
+
+先ほどのコードでcanvas タグに文字を表示してみたいと思います。
+
+```
+var mainCanvas = document.getElementById('mainCanvas');
+var context = mainCanvas.getContext('2d');
+// ゲーム更新
+function update() {
+	// 画面をクリア
+	context.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+	ctx.font = "18px 'MS ゴシック'";
+	ctx.fillStyle = 'rgb( 255, 255, 255 )'; // 黒
+
+	// 文字を描画
+	ctx.fillText("Hello World!", mainCanvas.width/2, mainCanvas.height);
+
+}
+
+function run() {
+	update();
+
+	window.requestAnimationFrame(run)
+}
+
+run();
+```
+
+画面中央に「Hello World!」という文字列が表示されたかと思います。
+
+# 終わりに
+ゲームクラスを作っておきます。ゲームクラスに、ゲームループに必要な処理を実装することにします。
+`src/game.js
+```
+var Game = function (canvas) {
+	this.ctx = canvas.getContext('2d'); // Canvas への描画は、ctx プロパティを通して行うこととする。
+	// 画面サイズ
+	this.height = canvas.height;
+	this.width = canvas.width;
+
+};
+Game.prototype.startRun = function () {
+
+	this.run();
+};
+
+Game.prototype.run = function () {
+	// ここにゲームの処理を書く
+
+	this.request_id = requestAnimationFrame(this.run.bind(this));
+};
+module.exports = Game;
+```
+
+ゲームクラスのインスタンスを生成し、ゲームを起動するエントリポイントを作ります。
+`src/main.js`
+```
+var mainCanvas = document.getElementById('mainCanvas');
+var Game = require("game");
+var game = new Game(mainCanvas);
+game.startRun();
+```
