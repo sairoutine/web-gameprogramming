@@ -163,7 +163,141 @@ Game.prototype.changePrevScene = function () {
 用意して、そこに `addScene`, `changeScene` といったメソッドをまとめる場合も多いです。
 
 ## オブジェクト
+オブジェクトを作っていきましょう。自機オブジェクトを作成します。
+`src/object/chara.js`
+```
+var Chara = function (scene) {
+	this.scene = scene;
+	this.game = game;
 
+	this._id = "chara";
 
+	this.x = 0;
+	this.y = 0;
 
+	// 経過フレーム数
+	this.frame_count = 0;
+};
+Chara.prototype.id = function () {
+	return this._id;
+};
+// 更新
+Chara.prototype.update = function () {
+	this.frame_count++;
+};
+// 描画
+Chara.prototype.draw = function () {
 
+};
+module.exports = Chara;
+```
+
+Chara クラスを作りました。Chara クラスはインスタンスメソッドとして、
+update と draw メソッドを持っています。また、パブリックなアクセサとして、idを持っています。
+
+Scene クラスと同じように、update と draw メソッドは、1秒間に 60回呼び出すこととします。
+update メソッドはゲームの状態の更新を担当し、draw はその後に状態を元に描画することを担当することにします。
+
+id はゲーム内でオブジェクトを一意に識別するIDです。例えば、敵の弾などは画面上に複数存在するので、
+それらを個別に識別するIDがあると便利です。今回、キャラは画面上に1機だけなので、
+`"chara"` 固定にしたいと思います。
+
+コンストラクタの引数に `scene` 引数を取っています。`scene` は シーンクラスのインスタンスを渡すことにします。
+
+# シーンにオブジェクトの追加
+ステージシーンに、先ほど追加したキャラクラスのインスタンスを追加したいと思います。
+`src/scene/stage.js`
+```
+var Chara = require("../object/chara");
+var StageScene = function (game) {
+	this.game = game;
+
+	// シーン上のオブジェクト一覧
+	this.objects = {};
+
+	// 経過フレーム数
+	this.frame_count = 0;
+
+	this.addObject(new Chara(this));
+};
+StageScene.prototype.addObject = function (object) {
+	this.objects[object.id()] = object;
+};
+// 更新
+StageScene.prototype.update = function () {
+	this.frame_count++;
+
+	this.updateObjects();
+};
+StageScene.prototype.updateObjects = function () {
+	for (var id in this.objects) {
+		this.objects[id].update();
+	}
+};
+
+// 描画
+StageScene.prototype.draw = function () {
+	this.drawObjects();
+
+};
+StageScene.prototype.drawObjects = function () {
+	for (var id in this.objects) {
+		this.objects[id].draw();
+	}
+};
+
+module.exports = StageScene;
+```
+
+```
+var StageScene = function (game) {
+	this.game = game;
+
+	// シーン上のオブジェクト一覧
+	this.objects = {};
+
+	// 経過フレーム数
+	this.frame_count = 0;
+
+	this.addObject(new Chara(this));
+};
+StageScene.prototype.addObject = function (object) {
+	this.objects[object.id()] = object;
+};
+```
+
+`addObject` メソッドを追加して、ステージシーンにキャラインスタンスを追加しています。
+追加されたキャラインスタンスは、今後追加されるであろう
+他のオブジェクトと一緒に、`objects` プロパティ内で管理されます。
+この辺りは、Game クラスに、シーン管理を追加したときと同じですね。
+
+```
+// 更新
+StageScene.prototype.update = function () {
+	this.frame_count++;
+
+	this.updateObjects();
+};
+StageScene.prototype.updateObjects = function () {
+	for (var id in this.objects) {
+		this.objects[id].update();
+	}
+};
+```
+
+シーンの update を実行すると、シーンが管理している各オブジェクトの update も実行されるようにします。
+
+```
+// 描画
+StageScene.prototype.draw = function () {
+	this.drawObjects();
+
+};
+StageScene.prototype.drawObjects = function () {
+	for (var id in this.objects) {
+		this.objects[id].draw();
+	}
+};
+```
+
+同様に、シーンの draw を実行すると、シーンが管理する各オブジェクトの draw も実行されるようにします。
