@@ -65,18 +65,17 @@ Game.prototype.run = function () {
 
 	this.request_id = requestAnimationFrame(this.run.bind(this));
 };
-
-Game.prototype.addScene = function (name, scene) {
-	this.scenes[name] = scene;
-};
-Game.prototype.changeScene = function (name) {
-	this.next_scene = name;
-};
 Game.prototype.toNextSceneIfExists = function () {
 	if(!this.next_scene) return;
 
 	this.current_scene = this.next_scene;
 	this.next_scene = null;
+};
+Game.prototype.addScene = function (name, scene) {
+	this.scenes[name] = scene;
+};
+Game.prototype.changeScene = function (name) {
+	this.next_scene = name;
 };
 Game.prototype.changePrevScene = function () {
 	if(!this.prev_scene) return;
@@ -112,16 +111,8 @@ Game クラスのコンストラクタを変更してます。大きな変更は
 基本的に、`addScene` は、動的にシーンを生成して追加する要件がないかぎり、
 ゲームを初期化する際に、全てのシーンを追加することとなるかと思います。
 
-
-
-
-
-
-
-
-
-
-と、`addScene`, `changeScene` メソッドを追加しております。
+`next_scene`, `current_scene`, `prev_scene` はそれぞれ、「次に遷移するシーン」「現在のシーン」「前のシーン」です。
+後述しますが、シーンを切り替える際は、切り替えを実行して、すぐに切り替えるのではなく、次のフレームの最初にシーン切り替えを行います。そのため、切り替え先のシーンを保存する `next_scene` が必要になります。また、前のシーンに戻りたい、例えばステージシーンで、メニューを開いて、メニューを閉じたらまた元のステージに戻る場合などのために、前のシーンを保存する `prev_scene` を使用します。
 
 ```
 Game.prototype.run = function () {
@@ -130,6 +121,19 @@ Game.prototype.run = function () {
 	this.request_id = requestAnimationFrame(this.run.bind(this));
 };
 ```
+
+`run` メソッド内にて、`toNextSceneIfExists` メソッドを呼び出しています。先述しましたが、`toNextSceneIfExists` 関数は、`next_scene` プロパティに、切り替え先のシーンが予約されていれば、そのシーンに切り替えを行います。
+
+```
+Game.prototype.toNextSceneIfExists = function () {
+	if(!this.next_scene) return;
+
+	this.current_scene = this.next_scene;
+	this.next_scene = null;
+};
+```
+
+`addScene`, `changeScene` メソッドについては以下の通りです。
 
 ```
 Game.prototype.addScene = function (name, scene) {
@@ -144,16 +148,7 @@ Game.prototype.changeScene = function (name) {
 };
 ```
 
-```
-Game.prototype.toNextSceneIfExists = function () {
-	if(!this.next_scene) return;
-
-	this.current_scene = this.next_scene;
-	this.next_scene = null;
-};
-```
-
-
+また、`changePrevScene` メソッドも追加しておきます。前のシーンに戻る関数です。
 
 ```
 Game.prototype.changePrevScene = function () {
@@ -163,16 +158,6 @@ Game.prototype.changePrevScene = function () {
 	this.prev_scene = null;
 };
 ```
-
-
-
-
-
-
-
-
-
-
 
 なお、これらのシーン管理は、いわゆる Game クラスにさせるのではなく、`SceneManager` のような専用のクラスを
 用意して、そこに `addScene`, `changeScene` といったメソッドをまとめる場合も多いです。
