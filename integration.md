@@ -33,6 +33,7 @@
 │   └── sound
 └── src
     └── js
+        ├── asset_loader
         ├── logic
         ├── object
         ├── scene
@@ -40,7 +41,6 @@
         └── main.js
 ```
 
-TODO:
   **package.json**  
 `npm init` により生成します。申し訳ありませんが、`npm` についての説明は省略します。
   **public/bgm**  
@@ -55,6 +55,8 @@ gulp 及び browserify でビルドされた js をここに置くことにし�
 あなたはこのファイルを編集してはいけません。
   **public/index.html**  
 ゲームを表示するためのHTMLファイルです。
+  **src/js/logic**  
+ゲームのソースコードのうち、画像や音声データの読み込みをするクラスをここに置くことにします。
   **src/js/logic**  
 ゲームのソースコードのうち、ゲームロジックに値するクラスはここに置くことにします。
   **src/js/object**  
