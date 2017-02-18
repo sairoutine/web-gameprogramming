@@ -111,40 +111,38 @@ ImageLoader.prototype.remove = function(name) {
 一般的に、キャラのアニメーションなどに使用する画像ファイルや、敵の弾の種類は、一つの画像ファイルにまとめる傾向があります。
 
 それでは、オブジェクトにスプライトを使用して、画像を表示するようにしてみましょう。
-# TODO:
-`src/util.js`
-```
-var Util = {
-	inherit: function( child, parent ) {
-		var getPrototype = function(p) {
-			if(Object.create) return Object.create(p);
 
-			var F = function() {};
-			F.prototype = p;
-			return new F();
-		};
-		child.prototype = getPrototype(parent.prototype);
-		child.prototype.constructor = child;
-	},
-```
+**スプライト画像**  
+![早苗](./image/player_sanae.png)
 
-`src/object/sprite.js`
-```
-var Sprite = function(scene) {
-	base_object.apply(this, arguments);
+http://danmakufu.wiki.fc2.com/wiki/%E7%B4%A0%E6%9D%90%E3%83%AA%E3%83%B3%E3%82%AF
+星蓮船自機ドット絵
+霊夢・魔理沙・早苗の星蓮船風ドット絵
+よりお借りしております。
 
+`src/object/chara.js`
+```
+var Chara = function (scene) {
+	this.scene = scene;
+	this.game = game;
+
+	this._id = "chara";
+
+	this.x = 0;
+	this.y = 0;
+
+	// 経過フレーム数
+	this.frame_count = 0;
+
+	// 現在表示するスプライト
 	this.current_sprite_index = 0;
 };
-util.inherit(Sprite, base_object);
-
-Sprite.prototype.init = function(){
-	base_object.prototype.init.apply(this, arguments);
-
-	this.current_sprite_index = 0;
+Chara.prototype.id = function () {
+	return this._id;
 };
-
-Sprite.prototype.beforeDraw = function(){
-	base_object.prototype.beforeDraw.apply(this, arguments);
+// 更新
+Chara.prototype.update = function () {
+	this.frame_count++;
 
 	// animation sprite
 	if(this.frame_count % this.spriteAnimationSpan() === 0) {
@@ -153,10 +151,10 @@ Sprite.prototype.beforeDraw = function(){
 			this.current_sprite_index = 0;
 		}
 	}
-};
-Sprite.prototype.draw = function(){
-	base_object.prototype.draw.apply(this, arguments);
 
+};
+// 描画
+Chara.prototype.draw = function () {
 	var image = this.core.image_loader.getImage(this.spriteName());
 
 	var ctx = this.core.ctx;
@@ -164,19 +162,10 @@ Sprite.prototype.draw = function(){
 	ctx.save();
 
 	// set position
-	ctx.translate(this.globalCenterX(), this.globalCenterY());
-
-	// rotate
-	var rotate = util.thetaToRadian(this.velocity.theta + this.rotateAdjust());
-	ctx.rotate(rotate);
+	ctx.translate(this.x, this.y);
 
 	var sprite_width  = this.spriteWidth();
 	var sprite_height = this.spriteHeight();
-	if(!sprite_width)  sprite_width = image.width;
-	if(!sprite_height) sprite_height = image.height;
-
-	var width  = sprite_width * this.scale();
-	var height = sprite_height * this.scale();
 
 	ctx.drawImage(image,
 		// sprite position
@@ -184,44 +173,135 @@ Sprite.prototype.draw = function(){
 		// sprite size to get
 		sprite_width,                       sprite_height,
 		// adjust left x, up y because of x and y indicate sprite center.
-		-width/2,                           -height/2,
+		-sprite_width/2,                    -sprite_height/2,
 		// sprite size to show
-		width,                              height
+		sprite_width,                       sprite_height
 	);
 	ctx.restore();
 };
 
-Sprite.prototype.spriteName = function(){
-	throw new Error("spriteName method must be overridden.");
+Chara.prototype.spriteName = function(){
+	return "sanae";
 };
-Sprite.prototype.spriteIndexX = function(){
+Chara.prototype.spriteIndexX = function(){
 	return this.spriteIndices()[this.current_sprite_index].x;
 };
-Sprite.prototype.spriteIndexY = function(){
+Chara.prototype.spriteIndexY = function(){
 	return this.spriteIndices()[this.current_sprite_index].y;
 };
-Sprite.prototype.spriteAnimationSpan = function(){
-	return 0;
-};
-Sprite.prototype.spriteIndices = function(){
-	return [{x: 0, y: 0}];
-};
-Sprite.prototype.spriteWidth = function(){
-	return 0;
-};
-Sprite.prototype.spriteHeight = function(){
-	return 0;
-};
-Sprite.prototype.rotateAdjust = function(){
-	return 0;
-};
-Sprite.prototype.scale = function(){
+Chara.prototype.spriteAnimationSpan = function(){
 	return 1;
+};
+Chara.prototype.spriteIndices = function(){
+	return [{x: 0, y: 0},{x: 0, y: 1}];
+};
+Chara.prototype.spriteWidth = function(){
+	return 64;
+};
+Chara.prototype.spriteHeight = function(){
+	return 64;
+};
+module.exports = Chara;
+```
+
+先ほど紹介した Chara クラスを改良しました。それではコードを追っていきましょう。
+
+# TODO:
+```
+var Chara = function (scene) {
+	this.scene = scene;
+	this.game = game;
+
+	this._id = "chara";
+
+	this.x = 0;
+	this.y = 0;
+
+	// 経過フレーム数
+	this.frame_count = 0;
+
+	// 現在表示するスプライト
+	this.current_sprite_index = 0;
 };
 ```
 
+``
+// 更新
+Chara.prototype.update = function () {
+	this.frame_count++;
 
+	// animation sprite
+	if(this.frame_count % this.spriteAnimationSpan() === 0) {
+		this.current_sprite_index++;
+		if(this.current_sprite_index >= this.spriteIndices().length) {
+			this.current_sprite_index = 0;
+		}
+	}
 
+};
+```
+
+```
+// 描画
+Chara.prototype.draw = function () {
+	var image = this.core.image_loader.getImage(this.spriteName());
+
+	var ctx = this.core.ctx;
+
+	ctx.save();
+
+	// set position
+	ctx.translate(this.x, this.y);
+
+	var sprite_width  = this.spriteWidth();
+	var sprite_height = this.spriteHeight();
+
+	ctx.drawImage(image,
+		// sprite position
+		sprite_width * this.spriteIndexX(), sprite_height * this.spriteIndexY(),
+		// sprite size to get
+		sprite_width,                       sprite_height,
+		// adjust left x, up y because of x and y indicate sprite center.
+		-sprite_width/2,                    -sprite_height/2,
+		// sprite size to show
+		sprite_width,                       sprite_height
+	);
+	ctx.restore();
+};
+```
+
+```
+Chara.prototype.spriteName = function(){
+	return "sanae";
+};
+```
+
+```
+Chara.prototype.spriteIndexX = function(){
+	return this.spriteIndices()[this.current_sprite_index].x;
+};
+Chara.prototype.spriteIndexY = function(){
+	return this.spriteIndices()[this.current_sprite_index].y;
+};
+```
+```
+Chara.prototype.spriteAnimationSpan = function(){
+	return 1;
+};
+```
+```
+Chara.prototype.spriteIndices = function(){
+	return [{x: 0, y: 0},{x: 0, y: 1}];
+};
+```
+```
+Chara.prototype.spriteWidth = function(){
+	return 64;
+};
+Chara.prototype.spriteHeight = function(){
+	return 64;
+};
+```
 
 ## スプライトアニメーション
 
