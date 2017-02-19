@@ -208,6 +208,10 @@ Chara.prototype.draw = function () {
 HTML5 の Canvas API を利用して、スプライトの描画を行っています。
 オブジェクトから Canvas の API を利用するには、`this.core.ctx` を参照します。
 
+# TODO:
+save と restore について書く
+
+
 ```
 var image = this.core.image_loader.getImage(this.spriteName());
 ```
