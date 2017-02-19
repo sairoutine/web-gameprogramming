@@ -110,7 +110,13 @@ ImageLoader.prototype.remove = function(name) {
 
 一般的に、キャラのアニメーションなどに使用する画像ファイルや、敵の弾の種類は、一つの画像ファイルにまとめる傾向があります。
 
-それでは、オブジェクトにスプライトを使用して、画像を表示するようにしてみましょう。
+プログラムでは、スプライト画像を読み込み、指定の領域のみを切り取って表示することで使用します。
+
+それでは、Chara クラスにスプライトを使用して、画像を表示するようにしてみましょう。
+いくつかのスプライト画像の表示に使う定数の追加と、draw メソッドの変更を行います。
+
+# TODO:
+image_loader.loadImage を読み出してない
 
 **スプライト画像**  
 ![早苗](./image/player_sanae.png)
@@ -119,6 +125,153 @@ http://danmakufu.wiki.fc2.com/wiki/%E7%B4%A0%E6%9D%90%E3%83%AA%E3%83%B3%E3%82%AF
 星蓮船自機ドット絵
 霊夢・魔理沙・早苗の星蓮船風ドット絵
 よりお借りしております。
+
+`src/object/chara.js`
+```
+// 描画
+Chara.prototype.draw = function () {
+	var image = this.core.image_loader.getImage(this.spriteName());
+
+	var ctx = this.core.ctx;
+
+	ctx.save();
+
+	// set position
+	ctx.translate(this.x, this.y);
+
+	var sprite_width  = this.spriteWidth();
+	var sprite_height = this.spriteHeight();
+
+	ctx.drawImage(image,
+		// sprite position
+		sprite_width * this.spriteIndexX(), sprite_height * this.spriteIndexY(),
+		// sprite size to get
+		sprite_width,                       sprite_height,
+		// adjust left x, up y because of x and y indicate sprite center.
+		-sprite_width/2,                    -sprite_height/2,
+		// sprite size to show
+		sprite_width,                       sprite_height
+	);
+	ctx.restore();
+};
+
+Chara.prototype.spriteName = function(){
+	return "sanae";
+};
+Chara.prototype.spriteIndexX = function(){
+	return 0;
+};
+Chara.prototype.spriteIndexY = function(){
+	return 0;
+};
+Chara.prototype.spriteWidth = function(){
+	return 64;
+};
+Chara.prototype.spriteHeight = function(){
+	return 64;
+};
+module.exports = Chara;
+```
+
+先ほど紹介した Chara クラスを改良しました。それではコードを追っていきましょう。
+
+```
+// 描画
+Chara.prototype.draw = function () {
+	var image = this.core.image_loader.getImage(this.spriteName());
+
+	var ctx = this.core.ctx;
+
+	ctx.save();
+
+	// set position
+	ctx.translate(this.x, this.y);
+
+	var sprite_width  = this.spriteWidth();
+	var sprite_height = this.spriteHeight();
+
+	ctx.drawImage(
+		image,
+		// sprite position
+		sprite_width * this.spriteIndexX(), sprite_height * this.spriteIndexY(),
+		// sprite size to get
+		sprite_width,                       sprite_height,
+		// adjust left x, up y because of x and y indicate sprite center.
+		-sprite_width/2,                    -sprite_height/2,
+		// sprite size to show
+		sprite_width,                       sprite_height
+	);
+	ctx.restore();
+};
+``
+
+HTML5 の Canvas API を利用して、スプライトの描画を行っています。
+オブジェクトから Canvas の API を利用するには、`this.core.ctx` を参照します。
+
+```
+var image = this.core.image_loader.getImage(this.spriteName());
+```
+
+読み込んだ画像を取得しています。
+
+```
+	ctx.translate(this.x, this.y);
+```
+
+Canvas 上のどこに画像を描画するかを指定しています。
+
+```
+	ctx.drawImage(
+		image,
+		// sprite position
+		0,                                  0,
+		// sprite size to get
+		sprite_width,                       sprite_height,
+		// adjust left x, up y because of x and y indicate sprite center.
+		-sprite_width/2,                    -sprite_height/2,
+		// sprite size to show
+		sprite_width,                       sprite_height
+	);
+```
+
+取得した画像を drawImage 関数を利用して Canvas に描画しています。
+drawImage 関数は、引数に指定した数によって挙動が変わる関数です。今回は引数が9つの使い方をします。
+
+第1引数の image には、描画したい画像データを指定します。
+
+第2引数・第3引数には、画像のどこからを描画したいかを x, y 座標で指定します。
+画像の左上が(0, 0)となるので、今回は (0, 0)を指定することにします。
+
+第4引数,第5引数には、Canvas 上のどこに画像を描画するか、x, y 座標で指定します。
+`translate` で指定した描画位置から、相対的に描画位置をずらします。
+これは、`this.x` と `this.y` が指定する画像の位置は、基準を画像の真ん中にするためです。
+
+`translate` で描画位置を指定し、さらに drawImage で描画位置をずらすのは二度手間に見えるかもしれませんが、
+のちのち、画像の回転を行う上で大切になってきます。また画像の回転の項目で後述します。
+
+```
+Chara.prototype.spriteName = function(){
+	return "sanae";
+};
+Chara.prototype.spriteWidth = function(){
+	return 64;
+};
+Chara.prototype.spriteHeight = function(){
+	return 64;
+};
+```
+
+`spriteName` は読み込んだ画像を表示する定数です。`spriteWidth` `spriteHeight` には、
+読み込んだ画像のどこまでを切り取るか、横幅と高さを指定します。
+
+# TODO: 
+ここにスプライトの基準点と、切り取りについて解説した画像を出す
+
+
+
+
+
+## スプライトアニメーション
 
 `src/object/chara.js`
 ```
@@ -167,7 +320,8 @@ Chara.prototype.draw = function () {
 	var sprite_width  = this.spriteWidth();
 	var sprite_height = this.spriteHeight();
 
-	ctx.drawImage(image,
+	ctx.drawImage(
+		image,
 		// sprite position
 		sprite_width * this.spriteIndexX(), sprite_height * this.spriteIndexY(),
 		// sprite size to get
@@ -203,106 +357,5 @@ Chara.prototype.spriteHeight = function(){
 };
 module.exports = Chara;
 ```
-
-先ほど紹介した Chara クラスを改良しました。それではコードを追っていきましょう。
-
-# TODO:
-```
-var Chara = function (scene) {
-	this.scene = scene;
-	this.game = game;
-
-	this._id = "chara";
-
-	this.x = 0;
-	this.y = 0;
-
-	// 経過フレーム数
-	this.frame_count = 0;
-
-	// 現在表示するスプライト
-	this.current_sprite_index = 0;
-};
-```
-
-``
-// 更新
-Chara.prototype.update = function () {
-	this.frame_count++;
-
-	// animation sprite
-	if(this.frame_count % this.spriteAnimationSpan() === 0) {
-		this.current_sprite_index++;
-		if(this.current_sprite_index >= this.spriteIndices().length) {
-			this.current_sprite_index = 0;
-		}
-	}
-
-};
-```
-
-```
-// 描画
-Chara.prototype.draw = function () {
-	var image = this.core.image_loader.getImage(this.spriteName());
-
-	var ctx = this.core.ctx;
-
-	ctx.save();
-
-	// set position
-	ctx.translate(this.x, this.y);
-
-	var sprite_width  = this.spriteWidth();
-	var sprite_height = this.spriteHeight();
-
-	ctx.drawImage(image,
-		// sprite position
-		sprite_width * this.spriteIndexX(), sprite_height * this.spriteIndexY(),
-		// sprite size to get
-		sprite_width,                       sprite_height,
-		// adjust left x, up y because of x and y indicate sprite center.
-		-sprite_width/2,                    -sprite_height/2,
-		// sprite size to show
-		sprite_width,                       sprite_height
-	);
-	ctx.restore();
-};
-```
-
-```
-Chara.prototype.spriteName = function(){
-	return "sanae";
-};
-```
-
-```
-Chara.prototype.spriteIndexX = function(){
-	return this.spriteIndices()[this.current_sprite_index].x;
-};
-Chara.prototype.spriteIndexY = function(){
-	return this.spriteIndices()[this.current_sprite_index].y;
-};
-```
-```
-Chara.prototype.spriteAnimationSpan = function(){
-	return 1;
-};
-```
-```
-Chara.prototype.spriteIndices = function(){
-	return [{x: 0, y: 0},{x: 0, y: 1}];
-};
-```
-```
-Chara.prototype.spriteWidth = function(){
-	return 64;
-};
-Chara.prototype.spriteHeight = function(){
-	return 64;
-};
-```
-
-## スプライトアニメーション
 
 
