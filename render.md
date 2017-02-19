@@ -273,6 +273,18 @@ Chara.prototype.spriteHeight = function(){
 
 ## スプライトアニメーション
 
+先ほど、スプライト画像からスプライトを切り取って表示することを行いました。
+これにより自機のキャラ画像が表示されたことかと思います。
+
+さらに自機の画像をアニメーションさせてみたいと思います。
+
+アニメーションの方法は、パラパラ漫画と同じように、
+N秒毎に、表示するスプライトを変更することで行います。
+
+それでは、自機のスプライト画像2種類を、を10フレーム毎に切り替えて、
+アニメーションさせてみましょう。 Chara クラスを変更します。
+
+
 `src/object/chara.js`
 ```
 var Chara = function (scene) {
@@ -344,10 +356,10 @@ Chara.prototype.spriteIndexY = function(){
 	return this.spriteIndices()[this.current_sprite_index].y;
 };
 Chara.prototype.spriteAnimationSpan = function(){
-	return 1;
+	return 10;
 };
 Chara.prototype.spriteIndices = function(){
-	return [{x: 0, y: 0},{x: 0, y: 1}];
+	return [{x: 0, y: 0},{x: 1, y: 0}];
 };
 Chara.prototype.spriteWidth = function(){
 	return 64;
@@ -359,3 +371,108 @@ module.exports = Chara;
 ```
 
 
+```
+var Chara = function (scene) {
+	this.scene = scene;
+	this.game = game;
+
+	this._id = "chara";
+
+	this.x = 0;
+	this.y = 0;
+
+	// 経過フレーム数
+	this.frame_count = 0;
+
+	// 現在表示するスプライト
+	this.current_sprite_index = 0;
+};
+```
+
+`this.current_sprite_index` というプロパティを追加しました。これは、
+現在表示するスプライトがどれかを表します。今回は、スプライト画像が2種類なので、0 か 1 の値を取り、
+また、10フレームごとに変更します。
+
+```
+Chara.prototype.spriteAnimationSpan = function(){
+	return 10;
+};
+```
+
+スプライトを切り替える間隔を定義しています。10 フレームごとに切り替えるので、10を指定しました。
+
+```
+Chara.prototype.spriteIndices = function(){
+	return [{x: 0, y: 0},{x: 1, y: 0}];
+};
+```
+
+`spriteIndices` にスプライト画像の位置を指定しています。今回は2種類のスプライト画像を使用するので、
+左から0番目、上から0番目のスプライト画像を1つと、左から1番目、上から0番目のスプライト画像を表示するので、
+`[{x: 0, y: 0},{x: 1, y: 0}]` を指定しました。
+
+```
+Chara.prototype.spriteIndexX = function(){
+	return this.spriteIndices()[this.current_sprite_index].x;
+};
+Chara.prototype.spriteIndexY = function(){
+	return this.spriteIndices()[this.current_sprite_index].y;
+};
+```
+
+current_sprite_index と spriteIndices を元に、スプライト画像のどの座標を切り取ればいいのかを返します。
+
+```
+// 描画
+Chara.prototype.draw = function () {
+	var image = this.core.image_loader.getImage(this.spriteName());
+
+	var ctx = this.core.ctx;
+
+	ctx.save();
+
+	// set position
+	ctx.translate(this.x, this.y);
+
+	var sprite_width  = this.spriteWidth();
+	var sprite_height = this.spriteHeight();
+
+	ctx.drawImage(
+		image,
+		// sprite position
+		sprite_width * this.spriteIndexX(), sprite_height * this.spriteIndexY(),
+		// sprite size to get
+		sprite_width,                       sprite_height,
+		// adjust left x, up y because of x and y indicate sprite center.
+		-sprite_width/2,                    -sprite_height/2,
+		// sprite size to show
+		sprite_width,                       sprite_height
+	);
+	ctx.restore();
+};
+```
+
+drawImage の第2引数と第3引数が変更になっております。`spriteIndexX` と `spriteIndexY` を元に、
+スプライト画像のどこを切り取るかを指定しています。この `spriteIndexX` と `spriteIndexY` は
+先述した `this.current_sprite_index` を元に決定されます。
+
+```
+// 更新
+Chara.prototype.update = function () {
+	this.frame_count++;
+
+	// animation sprite
+	if(this.frame_count % this.spriteAnimationSpan() === 0) {
+		this.current_sprite_index++;
+		if(this.current_sprite_index >= this.spriteIndices().length) {
+			this.current_sprite_index = 0;
+		}
+	}
+
+};
+```
+
+先述した、表示するスプライトを切り替える処理です。spriteAnimationSpan 毎に、current_sprite_index を +1 しており、
+また、表示できるスプライトがなくなれば、また最初のスプライトに戻ります。
+
+これで、自機キャラがアニメーションするようになりました。
