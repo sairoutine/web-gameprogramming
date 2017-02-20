@@ -14,8 +14,6 @@ var Constant = {
 	BUTTON_DOWN:  0x08, // 0b00001000
 	BUTTON_Z:     0x10, // 0b00010000
 	BUTTON_X:     0x20, // 0b00100000
-	BUTTON_SHIFT: 0x40, // 0b01000000
-	BUTTON_SPACE: 0x80, // 0b10000000
 };
 module.exports = Constant;
 ```
@@ -314,29 +312,53 @@ Game.prototype.run = function() {
 
 ## ゲームパッド入力
 
+ゲームパッド(ゲームのコントローラー)からの入力も取得できるようにします。
+HTML5 には GamePad API があるので、それを使ってゲームパッドからの入力を取得します。
+
+`src/input.js`
 ```
-	handleGamePad: function() {
-		if(!this.is_connect_gamepad) return;
+Input.prototype.handleGamePad = function() {
+	var pads = navigator.getGamepads();
+	var pad = pads[0]; // 1Pコン
 
-		var pads = navigator.getGamepads();
-		var pad = pads[0]; // 1Pコン
+	if(!pad) return;
 
-		if(!pad) return;
+	this.keyflag = 0x00;
+	this.keyflag |= pad.buttons[0].pressed ? constant.BUTTON_Z:      0x00;
+	this.keyflag |= pad.buttons[1].pressed ? constant.BUTTON_X:      0x00;
 
-		this.keyflag = 0x00;
-		this.keyflag |= pad.buttons[1].pressed ? constant.BUTTON_Z:      0x00;// A
-		this.keyflag |= pad.buttons[0].pressed ? constant.BUTTON_X:      0x00;// B
-		this.keyflag |= pad.buttons[2].pressed ? constant.BUTTON_SELECT: 0x00;// SELECT
-		this.keyflag |= pad.buttons[3].pressed ? constant.BUTTON_START:  0x00;// START
-		this.keyflag |= pad.buttons[4].pressed ? constant.BUTTON_SHIFT:  0x00;// SHIFT
-		this.keyflag |= pad.buttons[5].pressed ? constant.BUTTON_SHIFT:  0x00;// SHIFT
-		this.keyflag |= pad.buttons[6].pressed ? constant.BUTTON_SPACE:  0x00;// SPACE
-		//this.keyflag |= pad.buttons[8].pressed ? 0x04 : 0x00;// SELECT
-		//this.keyflag |= pad.buttons[9].pressed ? 0x08 : 0x00;// START
-
-		this.keyflag |= pad.axes[1] < -0.5 ? constant.BUTTON_UP:         0x00;// UP
-		this.keyflag |= pad.axes[1] >  0.5 ? constant.BUTTON_DOWN:       0x00;// DOWN
-		this.keyflag |= pad.axes[0] < -0.5 ? constant.BUTTON_LEFT:       0x00;// LEFT
-		this.keyflag |= pad.axes[0] >  0.5 ? constant.BUTTON_RIGHT:      0x00;// RIGHT
-	},
+	this.keyflag |= pad.axes[1] < -0.5 ? constant.BUTTON_UP:         0x00;
+	this.keyflag |= pad.axes[1] >  0.5 ? constant.BUTTON_DOWN:       0x00;
+	this.keyflag |= pad.axes[0] < -0.5 ? constant.BUTTON_LEFT:       0x00;
+	this.keyflag |= pad.axes[0] >  0.5 ? constant.BUTTON_RIGHT:      0x00;
+};
 ```
+
+`handleGamePad` 関数は、ゲームパッドからの入力を受け取って、`keyflag` プロパティを更新するメソッドです。
+
+`navigator.getGamepads` 関数により、ゲームパッドの情報を取得できます。`navigator.getGamepads` は、
+配列を返します。複数のゲームパッドが接続されていた場合にもそれぞれのゲームパッドの値が取得できるように、
+`navigator.getGamepads` は配列を返すようになっているのです。今回は1Pコントローラしか使用しないので、
+`pads[0]` のみを取得します。
+
+`pad` 変数には、`pad.buttons` と、`pad.axes` があります。buttons は各種ボタン、axes は各種方向キーです。
+今回は、`buttons[0]` を、キーボードのZボタンと同等に、`buttons[1]` をキーボードのXボタンと同等に扱います。
+
+`pad.axes` は、2つの値の配列であり、それぞれ -1 ~ 1 の値を取ります。
+これは、スティックをどの方向にどれだけ倒したかによります。
+
+
+# TODO:
+スティックと十字キーの違いについて解説
+
+
+`src/game.js`
+```
+Game.prototype.run = function() {
+	this.input.handleGamePad();
+	/* ~ 以下省略 ~ */
+};
+```
+
+最後に、Game クラスの run メソッド内で、`handleGamePad` を呼び出します。
+これで、ゲームプログラムから、ゲームパッドの値を取得することができます。
