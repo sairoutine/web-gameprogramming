@@ -43,8 +43,11 @@ Character.prototype.forbidOutOfStage = function(){
 		this.y = this.core.height;
 	}
 };
-``
+```
 
+run メソッド内で、プレイヤーの入力を受け取って、自機のx, y座標を移動させています。
+また、forbidOutOfStage メソッドにより、自機が画面の外に出てしまわないように、
+画面外に出てしまったら、画面内に座標を戻すように修正しています。
 
 ## vector
 ## aimed
