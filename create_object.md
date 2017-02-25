@@ -195,7 +195,7 @@ module.exports = Shot;
 
 `src/js/object/chara.js`
 ```
-Chara.prototype.run = function () {
+Chara.prototype.update = function () {
 	BaseObject.run.apply(this, arguments); // 親クラスの run を実行
 
 	// Zが押下されていればショット生成
