@@ -968,30 +968,121 @@ ObjectBase &#x30AF;&#x30E9;&#x30B9;&#x306B;&#x79FB;&#x52D5;&#x3057;&#x305F;&#x30
 &#x5F3E;&#x753B;&#x50CF;
 &#x5F3E;&#x306E;&#x30BA;&#x30EC;&#x304C;&#x6700;&#x3082;&#x5C11;&#x306A;&#x3044;&#x753B;&#x50CF;&#x3002;img&#x30D5;&#x30A9;&#x30EB;&#x30C0;&#x306B;&#x5165;&#x308C;&#x308B;&#x3060;&#x3051;&#x3067;&#x4F7F;&#x3048;&#x308B;&#x30BF;&#x30A4;&#x30D7;&#x3002;
 &#x3088;&#x308A;&#x304A;&#x501F;&#x308A;&#x3057;&#x3066;&#x304A;&#x308A;&#x307E;&#x3059;&#x3002;</p>
+<h1 id="todo">TODO:</h1>
+<p>image_loader &#x3092;&#x4F7F;&#x3063;&#x3066;&#x753B;&#x50CF;&#x3092;&#x30ED;&#x30FC;&#x30C9;&#x3057;&#x3066;&#x3044;&#x306A;&#x3044;</p>
 <p><code>src/js/shot.js</code></p>
 <pre><code>var Util = require(&quot;../util&quot;);
 var ObjectBase = require(&quot;./base&quot;);
-var Shot = function (scene) {
+var Shot = function (scene, x, y) {
     ObjectBase.apply(this, arguments);
+
+    this.x = x;
+    this.y = y;
 };
 Shot.prototype.spriteName = function(){
-    return &quot;sanae&quot;;
+    return &quot;shot&quot;;
 };
 Shot.prototype.spriteAnimationSpan = function(){
-    return 10;
+    return 0;
 };
 Shot.prototype.spriteIndices = function(){
-    return [{x: 0, y: 0},{x: 1, y: 0}];
+    return [{x: 0, y: 0}];
 };
 Shot.prototype.spriteWidth = function(){
-    return 64;
+    return 16;
 };
 Shot.prototype.spriteHeight = function(){
-    return 64;
+    return 16;
 };
 module.exports = Shot;
-</code></pre><h2 id="&#x6575;">&#x6575;</h2>
+</code></pre><p>&#x30B9;&#x30D7;&#x30E9;&#x30A4;&#x30C8;&#x30A2;&#x30CB;&#x30E1;&#x30FC;&#x30B7;&#x30E7;&#x30F3;&#x3092;&#x4F7F;&#x7528;&#x3057;&#x306A;&#x3044;&#x305F;&#x3081;&#x3001;&#x30B9;&#x30D7;&#x30E9;&#x30A4;&#x30C8;&#x3092;1&#x3064;&#x3060;&#x3051;&#x6307;&#x5B9A;&#x3057;&#x3066;&#x3044;&#x307E;&#x3059;&#x3002;</p>
+<p><code>src/js/object/chara.js</code></p>
+<pre><code>Chara.prototype.update = function () {
+    BaseObject.run.apply(this, arguments); // &#x89AA;&#x30AF;&#x30E9;&#x30B9;&#x306E; run &#x3092;&#x5B9F;&#x884C;
+
+    // Z&#x304C;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;&#x30B7;&#x30E7;&#x30C3;&#x30C8;&#x751F;&#x6210;
+    if(this.core.isKeyDown(Constant.BUTTON_Z)) {
+        this.scene.addObject(new Shot(this, this.x, this.y));
+    }
+};
+</code></pre><p>&#x5148;&#x8FF0;&#x306E;&#x9805;&#x76EE;&#x3067;&#x8FF0;&#x3079;&#x305F;&#x3001;&#x30D7;&#x30EC;&#x30A4;&#x30E4;&#x30FC;&#x304B;&#x3089;&#x306E;&#x5165;&#x529B;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;&#x65B9;&#x6CD5;&#x306B;&#x5F93;&#x3044;&#x3001;
+&#x4E0A;&#x8A18;&#x306E;&#x3088;&#x3046;&#x306B; &#x30AD;&#x30E3;&#x30E9;&#x30AF;&#x30E9;&#x30B9;&#x5185;&#x3067;&#x3001;&#x30D7;&#x30EC;&#x30A4;&#x30E4;&#x30FC;&#x306E; Z &#x30DC;&#x30BF;&#x30F3;&#x306E;&#x62BC;&#x4E0B;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x3066;&#x3001;
+shot &#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x3092;&#x751F;&#x6210;&#x3057;&#x3001;&#x30B9;&#x30C6;&#x30FC;&#x30B8;&#x306B;&#x8FFD;&#x52A0;&#x3057;&#x3066;&#x3044;&#x307E;&#x3059;&#x3002;</p>
+<p>&#x3053;&#x308C;&#x3067;&#x3001;Z&#x30DC;&#x30BF;&#x30F3;&#x3092;&#x62BC;&#x4E0B;&#x3059;&#x308B;&#x3053;&#x3068;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30E9;&#x304C;&#x5F3E;&#x3092;&#x6483;&#x3064;&#x3088;&#x3046;&#x306B;&#x306A;&#x308A;&#x307E;&#x3057;&#x305F;&#x3002;&#x3057;&#x304B;&#x3057;&#x3001;
+&#x30B7;&#x30E7;&#x30C3;&#x30C8;&#x306E;&#x52D5;&#x304D;&#x3092;&#x307E;&#x3060;&#x8FFD;&#x52A0;&#x3057;&#x3066;&#x3044;&#x306A;&#x3044;&#x305F;&#x3081;&#x3001;&#x30B9;&#x30C6;&#x30FC;&#x30B8;&#x4E0A;&#x306E;&#x81EA;&#x6A5F;&#x306E;&#x4F4D;&#x7F6E;&#x306B;&#x30B7;&#x30E7;&#x30C3;&#x30C8;&#x304C;
+&#x6709;&#x308A;&#x7D9A;&#x3051;&#x3066;&#x3001;&#x52D5;&#x304B;&#x306A;&#x3044;&#x3068;&#x601D;&#x3044;&#x307E;&#x3059;&#x3002;&#x3053;&#x308C;&#x306F;&#x3001;&#x4E8B;&#x9805;&#x306E;&#x79FB;&#x52D5;&#x306E;&#x9805;&#x76EE;&#x3067;&#x4FEE;&#x6B63;&#x3044;&#x305F;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<h2 id="&#x6575;">&#x6575;</h2>
+<p>&#x6575;&#x30AF;&#x30E9;&#x30B9;&#x306E;&#x4F5C;&#x6210;&#x3082;&#x884C;&#x3044;&#x307E;&#x3059;&#x3002;&#x3053;&#x308C;&#x306F;&#x3001;&#x4ECA;&#x307E;&#x3067;&#x306B;&#x3084;&#x3063;&#x3066;&#x304D;&#x305F;&#x3053;&#x3068;&#x3092;&#x901A;&#x308A;&#x3067;&#x5B9F;&#x88C5;&#x3067;&#x304D;&#x307E;&#x3059;&#x3002;</p>
+<p><strong>&#x30B9;&#x30D7;&#x30E9;&#x30A4;&#x30C8;&#x753B;&#x50CF;</strong><br><img src="image/dot_yousei.png" alt="&#x6575;"></p>
+<p><a href="http://danmakufu.wiki.fc2.com/wiki/%E7%B4%A0%E6%9D%90%E3%83%AA%E3%83%B3%E3%82%AF" target="_blank">http://danmakufu.wiki.fc2.com/wiki/%E7%B4%A0%E6%9D%90%E3%83%AA%E3%83%B3%E3%82%AF</a>
+KMAP&#x3055;&#x3093;&#x306E;&#x7D20;&#x6750;&#x8A70;&#x3081;&#x5408;&#x308F;&#x305B;
+KMAP -KUMAHACHAA PROJECT ver5.0.1-&#x304C; &#x30DA;&#x30FC;&#x30B8;&#x95B2;&#x89A7;&#x4E0D;&#x80FD;&#x306B;&#x306A;&#x3063;&#x305F;&#x305F;&#x3081;&#x518D;&#x914D;&#x5E03;
+&#x30C9;&#x30C3;&#x30C8;&#x7D75;&#x3001;&#x30AB;&#x30C3;&#x30C8;&#x30A4;&#x30F3;&#x753B;&#x50CF;&#x591A;&#x6570;&#x3042;&#x308A;&#x307E;&#x3059;&#x3002;</p>
+<p>&#x3088;&#x308A;&#x304A;&#x501F;&#x308A;&#x3057;&#x3066;&#x304A;&#x308A;&#x307E;&#x3059;&#x3002;</p>
+<h1 id="todo">TODO:</h1>
+<p>image_loader &#x3092;&#x4F7F;&#x3063;&#x3066;&#x753B;&#x50CF;&#x3092;&#x30ED;&#x30FC;&#x30C9;&#x3057;&#x3066;&#x3044;&#x306A;&#x3044;</p>
+<p><code>src/js/enemy.js</code></p>
+<pre><code>var Util = require(&quot;../util&quot;);
+var ObjectBase = require(&quot;./base&quot;);
+var enemy = function (scene, x, y) {
+    ObjectBase.apply(this, arguments);
+
+    this.x = x;
+    this.y = y;
+};
+enemy.prototype.spriteName = function(){
+    return &quot;enemy&quot;;
+};
+enemy.prototype.spriteAnimationSpan = function(){
+    return 0;
+};
+enemy.prototype.spriteIndices = function(){
+    return [{x: 0, y: 0}, {x: 0, y: 1}, {x:0, y:2}];
+};
+enemy.prototype.spriteWidth = function(){
+    return 16;
+};
+enemy.prototype.spriteHeight = function(){
+    return 16;
+};
+module.exports = enemy;
+</code></pre><p>&#x6575;&#x306E;&#x51FA;&#x73FE;&#x306B;&#x3064;&#x3044;&#x3066;&#x306F;&#x3001;&#x4E8B;&#x9805;&#x306E;&#x6575;&#x30DE;&#x30B9;&#x30BF;&#x30FC;&#x306B;&#x59D4;&#x306D;&#x308B;&#x3053;&#x3068;&#x306B;&#x3057;&#x307E;&#x3059;&#x3002;</p>
 <h2 id="&#x6575;&#x30DE;&#x30B9;&#x30BF;&#x30FC;">&#x6575;&#x30DE;&#x30B9;&#x30BF;&#x30FC;</h2>
+<p>&#x6575;&#x306E;&#x51FA;&#x73FE;&#x306B;&#x3064;&#x3044;&#x3066;&#x306F;&#x3001;&#x3044;&#x3064;&#x3069;&#x3053;&#x304B;&#x3089;&#x51FA;&#x73FE;&#x3059;&#x308B;&#x306E;&#x304B;&#x306E;&#x30ED;&#x30B8;&#x30C3;&#x30AF;&#x3092;&#x8003;&#x3048;&#x3066;&#x5B9F;&#x88C5;&#x3057;&#x306A;&#x304F;&#x3066;&#x306F;&#x306A;&#x308A;&#x307E;&#x305B;&#x3093;&#x3002;</p>
+<p>&#x3053;&#x3046;&#x3057;&#x305F;&#x30ED;&#x30B8;&#x30C3;&#x30AF;&#x306B;&#x3064;&#x3044;&#x3066;&#x3001;&#x6575;&#x30DE;&#x30B9;&#x30BF;&#x30FC;&#x3092;&#x4F5C;&#x6210;&#x3057;&#x3001;&#x6575;&#x30DE;&#x30B9;&#x30BF;&#x30FC;&#x306B;&#x4EFB;&#x305B;&#x308B;&#x3053;&#x3068;&#x306B;&#x3057;&#x305F;&#x3044;&#x3068;&#x601D;&#x3044;&#x307E;&#x3059;&#x3002;</p>
+<p><code>src/js/master.js</code></p>
+<pre><code>var Master = function (scene) {
+    this.scene = scene;
+
+    this.frame_count = 0;
+};
+Master.prototype.update = function () {
+    this.frame_count++;
+
+    if(this.frame_count % 100 === 0) {
+        var x = Math.floor(Math.random() * this.core.width); // x&#x8EF8;&#x306F;&#x30E9;&#x30F3;&#x30C0;&#x30E0;
+        var y = 0; // &#x753B;&#x9762;&#x4E0A;&#x90E8;&#x304B;&#x3089;
+        this.scene.addObject(new Enemy(this.scene, x, y));
+    }
+};
+</code></pre><p>&#x3053;&#x3046;&#x3057;&#x305F;&#x6575;&#x3092;&#x51FA;&#x73FE;&#x3055;&#x305B;&#x308B;&#x5B58;&#x5728;&#x3092;&#x3001;&#x900F;&#x660E;&#x306E;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x3068;&#x3057;&#x3066;&#x6271;&#x3046;&#x30B2;&#x30FC;&#x30E0;&#x30A8;&#x30F3;&#x30B8;&#x30F3;&#x3082;&#x5B58;&#x5728;&#x3057;&#x307E;&#x3059;&#x3002;&#x305D;&#x306E;&#x65B9;&#x304C;&#x3001;&#x65E2;&#x5B58;&#x306E;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x7BA1;&#x7406;&#x306E;&#x4ED5;&#x7D44;&#x307F;&#x306B;&#x4E57;&#x3063;&#x304B;&#x3063;&#x3066;
+&#x5B9F;&#x88C5;&#x3067;&#x304D;&#x308B;&#x306E;&#x3067;&#x3001;&#x697D;&#x306A;&#x306E;&#x3067;&#x3059;&#x304C;&#x3001;&#x4ECA;&#x56DE;&#x306F;&#x3001;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306E;&#x4ED5;&#x7D44;&#x307F;&#x306B;&#x4E57;&#x3063;&#x304B;&#x3089;&#x305A;&#x306B;&#x5B9F;&#x88C5;&#x3057;&#x305F;&#x3044;&#x3068;&#x601D;&#x3044;&#x307E;&#x3059;&#x3002;</p>
+<p>&#x51FA;&#x73FE;&#x30ED;&#x30B8;&#x30C3;&#x30AF;&#x306F;&#x6975;&#x3081;&#x3066;&#x30B7;&#x30F3;&#x30D7;&#x30EB;&#x3067;&#x3059;&#x3002;100&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x3054;&#x3068;&#x306B;1&#x3064;&#x3001;&#x6575;&#x3092;&#x51FA;&#x73FE;&#x3055;&#x305B;&#x307E;&#x3059;&#x3002;
+&#x51FA;&#x73FE;&#x4F4D;&#x7F6E;&#x306F;&#x3001;&#x753B;&#x9762;&#x4E0A;&#x90E8;&#x306E;&#x3069;&#x3053;&#x304B;&#x3089;&#x304B;&#x30E9;&#x30F3;&#x30C0;&#x30E0;&#x3067;&#x3059;&#x3002;</p>
+<p><code>src/js/scene/stage.js</code></p>
+<pre><code>var StageScene = function (game) {
+    /* ~ &#x4EE5;&#x4E0A;&#x7701;&#x7565; */
+    this.master = new Master(this);
+};
+// &#x66F4;&#x65B0;
+StageScene.prototype.update = function () {
+    this.frame_count++;
+
+    this.updateObjects();
+
+    this.master.update(); // &#x8FFD;&#x52A0;
+};
+</code></pre><p>Stage &#x30AF;&#x30E9;&#x30B9;&#x306B;&#x3066;&#x3001;Master &#x306E;&#x8FFD;&#x52A0;&#x53CA;&#x3073;&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x3054;&#x3068;&#x306E;&#x5B9F;&#x884C;&#x306E;&#x30B3;&#x30FC;&#x30C9;&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x307E;&#x3059;&#x3002;</p>
 
                                 
                                 </section>
@@ -1035,7 +1126,7 @@ module.exports = Shot;
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"オブジェクト生成","level":"1.7","depth":1,"next":{"title":"ショット","level":"1.7.1","depth":2,"anchor":"#ショット","path":"create_object.md","ref":"create_object.md#ショット","articles":[]},"previous":{"title":"押した時判定","level":"1.6.4","depth":2,"anchor":"#押した時判定","path":"input.md","ref":"input.md#押した時判定","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"create_object.md","mtime":"2017-02-25T07:59:49.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-07T11:16:07.287Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"オブジェクト生成","level":"1.7","depth":1,"next":{"title":"ショット","level":"1.7.1","depth":2,"anchor":"#ショット","path":"create_object.md","ref":"create_object.md#ショット","articles":[]},"previous":{"title":"押した時判定","level":"1.6.4","depth":2,"anchor":"#押した時判定","path":"input.md","ref":"input.md#押した時判定","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"create_object.md","mtime":"2017-02-25T13:14:47.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-07T11:16:07.287Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
