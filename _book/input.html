@@ -328,65 +328,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7" data-path="move.html">
-            
-                <a href="move.html">
-            
-                    
-                    移動
-            
-                </a>
-            
-
-            
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.7.1" data-path="move.html">
-            
-                <a href="move.html#キャラ移動">
-            
-                    
-                    キャラ移動
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.2" data-path="move.html">
-            
-                <a href="move.html#vector">
-            
-                    
-                    vector
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.3" data-path="move.html">
-            
-                <a href="move.html#aimed">
-            
-                    
-                    aimed
-            
-                </a>
-            
-
-            
-        </li>
-    
-
-            </ul>
-            
-        </li>
-    
-        <li class="chapter " data-level="1.8" data-path="create_object.html">
+        <li class="chapter " data-level="1.7" data-path="create_object.html">
             
                 <a href="create_object.html">
             
@@ -400,7 +342,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.8.1" data-path="create_object.html">
+        <li class="chapter " data-level="1.7.1" data-path="create_object.html">
             
                 <a href="create_object.html#ショット">
             
@@ -413,12 +355,70 @@
             
         </li>
     
-        <li class="chapter " data-level="1.8.2" data-path="create_object.html">
+        <li class="chapter " data-level="1.7.2" data-path="create_object.html">
             
                 <a href="create_object.html#敵">
             
                     
                     敵
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="move.html">
+            
+                <a href="move.html">
+            
+                    
+                    移動
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="move.html">
+            
+                <a href="move.html#キャラ移動">
+            
+                    
+                    キャラ移動
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="move.html">
+            
+                <a href="move.html#vector">
+            
+                    
+                    vector
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="move.html">
+            
+                <a href="move.html#aimed">
+            
+                    
+                    aimed
             
                 </a>
             
@@ -825,6 +825,299 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="&#x5165;&#x529B;">&#x5165;&#x529B;</h1>
+<p>&#x672C;&#x7A3F;&#x3067;&#x306F;&#x3001;&#x30D7;&#x30EC;&#x30A4;&#x30E4;&#x30FC;&#x304C;&#x30AD;&#x30FC;&#x30DC;&#x30FC;&#x30C9;&#x3042;&#x308B;&#x3044;&#x306F;&#x30B2;&#x30FC;&#x30E0;&#x30D1;&#x30C3;&#x30C9;(&#x30B2;&#x30FC;&#x30E0;&#x7528;&#x306E;&#x30B3;&#x30F3;&#x30C8;&#x30ED;&#x30FC;&#x30E9;&#x30FC;&#x306E;&#x3053;&#x3068;)&#x3092;&#x53D7;&#x3051;&#x53D6;&#x308B;&#x65B9;&#x6CD5;&#x306B;&#x3064;&#x3044;&#x3066;&#x89E3;&#x8AAC;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<h2 id="&#x30AD;&#x30FC;&#x30DC;&#x30FC;&#x30C9;&#x5165;&#x529B;">&#x30AD;&#x30FC;&#x30DC;&#x30FC;&#x30C9;&#x5165;&#x529B;</h2>
+<p>&#x307E;&#x305A;&#x3001;&#x30E6;&#x30FC;&#x30B6;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30DC;&#x30FC;&#x30C9;&#x5165;&#x529B;&#x3092;&#x53D7;&#x3051;&#x53D6;&#x308B;&#x30AF;&#x30E9;&#x30B9;&#x3092;&#x4F5C;&#x308A;&#x305F;&#x3044;&#x3068;&#x601D;&#x3044;&#x307E;&#x3059;&#x3002;</p>
+<p><code>src/constant.js</code></p>
+<pre><code>var Constant = {
+    BUTTON_LEFT:  0x01, // 0b00000001
+    BUTTON_UP:    0x02, // 0b00000010
+    BUTTON_RIGHT: 0x04, // 0b00000100
+    BUTTON_DOWN:  0x08, // 0b00001000
+    BUTTON_Z:     0x10, // 0b00010000
+    BUTTON_X:     0x20, // 0b00100000
+};
+module.exports = Constant;
+</code></pre><p>&#x3053;&#x3061;&#x3089;&#x306F;&#x30AD;&#x30FC;&#x5165;&#x529B;&#x3092;&#x8868;&#x3059;&#x5B9A;&#x6570;&#x3067;&#x3059;&#x3002;&#x5F8C;&#x8FF0;&#x3057;&#x307E;&#x3059;&#x304C;&#x3001;&#x30AD;&#x30FC;&#x304C;&#x5165;&#x529B;&#x3055;&#x308C;&#x305F;&#x304B;&#x3069;&#x3046;&#x304B;&#x306E;&#x60C5;&#x5831;&#x306F;&#x3001;&#x30D3;&#x30C3;&#x30C8;&#x3067;&#x7BA1;&#x7406;&#x3059;&#x308B;&#x3053;&#x3068;&#x306B;&#x3057;&#x307E;&#x3059;&#x3002;
+&#x3053;&#x308C;&#x306F;&#x4EE5;&#x4E0B;&#x306E;&#x30E1;&#x30EA;&#x30C3;&#x30C8;&#x306E;&#x305F;&#x3081;&#x3067;&#x3059;&#x3002;</p>
+<p>&#x30FB;&#x30D3;&#x30C3;&#x30C8;&#x6F14;&#x7B97;&#x5B50;&#x306E;&#x65B9;&#x304C;&#x901A;&#x5E38;&#x306E;&#x7B97;&#x8853;&#x3088;&#x308A;&#x9AD8;&#x901F;
+&#x30FB;&#x5909;&#x6570;&#x4E00;&#x3064;&#x3067;&#x3001;&#x8907;&#x6570;&#x306E;&#x30AD;&#x30FC;&#x62BC;&#x4E0B;&#x3092;&#x7BA1;&#x7406;&#x3059;&#x308B;&#x3053;&#x3068;&#x304C;&#x3067;&#x304D;&#x308B;&#x3002;</p>
+<p>ES5&#x3067;&#x306F;&#x3001;2&#x9032;&#x6570;&#x306B;&#x3088;&#x308B;&#x5024;&#x8868;&#x8A18;&#x304C;&#x3067;&#x304D;&#x306A;&#x3044;&#x305F;&#x3081;&#x3001;16&#x9032;&#x6570;&#x3067;&#x5B9A;&#x6570;&#x3092;&#x5B9A;&#x7FA9;&#x3057;&#x3066;&#x3044;&#x307E;&#x3059;&#x3002;
+2&#x9032;&#x6570;&#x306B;&#x3059;&#x308B;&#x3068;&#x3001;&#x3069;&#x3046;&#x3044;&#x3046;&#x5024;&#x306B;&#x306A;&#x308B;&#x304B;&#x306F;&#x3001;&#x30B3;&#x30E1;&#x30F3;&#x30C8;&#x306B;&#x8A18;&#x8F09;&#x3057;&#x307E;&#x3057;&#x305F;&#x3002;</p>
+<p>&#x3054;&#x89A7;&#x306E;&#x901A;&#x308A;&#x3001;&#x8A72;&#x5F53;&#x306E;&#x30AD;&#x30FC;&#x306B;&#x5BFE;&#x5FDC;&#x3059;&#x308B;&#x30D3;&#x30C3;&#x30C8;&#x304C;&#x7ACB;&#x3063;&#x3066;&#x3044;&#x308C;&#x3070;&#x3001;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x3068;&#x5224;&#x5B9A;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<p><code>src/input.js</code></p>
+<pre><code>var Consntant = require(&quot;./constant&quot;);
+var Input = function() {
+    // &#x30AD;&#x30FC;&#x62BC;&#x4E0B;&#x30D5;&#x30E9;&#x30B0;
+    this.keyflag = 0x0;
+
+    // &#x4E00;&#x3064;&#x524D;&#x306E;&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x3067;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;
+    this.before_keyflag = 0x0;
+};
+// &#x30AD;&#x30FC;&#x62BC;&#x4E0B;
+Input.prototype.handleKeyDown = function(e){
+    this.keyflag |= this._keyCodeToBitCode(e.keyCode);
+    e.preventDefault();
+};
+// &#x30AD;&#x30FC;&#x62BC;&#x4E0B;&#x89E3;&#x9664;
+Input.prototype.handleKeyUp = function(e){
+    this.keyflag &amp;= ~this._keyCodeToBitCode(e.keyCode);
+    e.preventDefault();
+};
+// &#x6307;&#x5B9A;&#x306E;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x72B6;&#x614B;&#x304B;&#x78BA;&#x8A8D;&#x3059;&#x308B;
+Input.prototype.isKeyDown = function(flag){
+    return this.keyflag &amp; flag;
+};
+// &#x6307;&#x5B9A;&#x306E;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x304B;&#x78BA;&#x8A8D;&#x3059;&#x308B;
+Input.prototype.isKeyPush = function(flag){
+    // 1&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x524D;&#x306B;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x304A;&#x3089;&#x305A;&#x3001;&#x73FE;&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x3067;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x308B;&#x306A;&#x3089; true
+    return !(this.before_keyflag &amp; flag) &amp;&amp; this.keyflag &amp; flag;
+};
+// &#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x3092;Bit&#x306B;&#x5909;&#x63DB;
+Input.prototype._keyCodeToBitCode = function(keyCode){
+    var flag;
+    switch(keyCode) {
+        case 16: // shift
+            flag = Constant.BUTTON_SHIFT;
+            break;
+        case 32: // space
+            flag = Constant.BUTTON_SPACE;
+            break;
+        case 37: // left
+            flag = Constant.BUTTON_LEFT;
+            break;
+        case 38: // up
+            flag = Constant.BUTTON_UP;
+            break;
+        case 39: // right
+            flag = Constant.BUTTON_RIGHT;
+            break;
+        case 40: // down
+            flag = Constant.BUTTON_DOWN;
+            break;
+        case 88: // x
+            flag = Constant.BUTTON_X;
+            break;
+        case 90: // z
+            flag = Constant.BUTTON_Z;
+            break;
+    }
+    return flag;
+};
+Input.prototype.bindKey = function(){
+    var self = this;
+    window.onkeydown = function(e) { self.handleKeyDown(e); };
+    window.onkeyup   = function(e) { self.handleKeyUp(e); };
+};
+Input.prototype.saveBeforeKey = function(){
+    this.before_keyflag = this.keyflag;
+    this.keyflag = 0x0;
+}
+</code></pre><p><code>src/game.js</code></p>
+<pre><code>var Game = function (canvas) {
+    this.input = new Input();
+    this.input.bindKey();
+
+    /* ~ &#x4EE5;&#x4E0B;&#x7701;&#x7565; ~ */
+};
+Game.prototype.run = function() {
+    /* ~ &#x4EE5;&#x4E0A;&#x7701;&#x7565; ~ */
+
+    // &#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x3092;&#x4FDD;&#x5B58;&#x3057;&#x3066;&#x304A;&#x304F;
+    this.input.saveBeforeKey();
+};
+</code></pre><p>&#x305D;&#x308C;&#x3067;&#x306F;&#x5C11;&#x3057;&#x305A;&#x3064;&#x89E3;&#x8AAC;&#x3057;&#x3066;&#x3044;&#x304D;&#x307E;&#x3059;&#x3002;</p>
+<pre><code>var Input = function() {
+    // &#x30AD;&#x30FC;&#x62BC;&#x4E0B;&#x30D5;&#x30E9;&#x30B0;
+    this.keyflag = 0x0;
+
+    // &#x4E00;&#x3064;&#x524D;&#x306E;&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x3067;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;
+    this.before_keyflag = 0x0;
+};
+</code></pre><p>Input &#x30AF;&#x30E9;&#x30B9;&#x306E;&#x30B3;&#x30F3;&#x30B9;&#x30C8;&#x30E9;&#x30AF;&#x30BF;&#x3067;&#x3059;&#x3002;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x3068;&#x3057;&#x3066;&#x3001;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x3092;&#x4FDD;&#x5B58;&#x3059;&#x308B; <code>keyflag</code> &#x3068;&#x3001;1&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x524D;&#x306B;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x3092;&#x4FDD;&#x5B58;&#x3059;&#x308B; <code>before_keyflag</code> &#x3092;&#x6301;&#x3061;&#x307E;&#x3059;&#x3002;&#x5148;&#x8FF0;&#x306E;&#x901A;&#x308A;&#x3001;<code>keyflag</code> &#x306F; 8bit &#x306E;&#x5024;&#x3068;&#x3057;&#x3066;&#x4F7F;&#x3044;&#x3001;&#x5404;bit &#x6BCE;&#x306B; bit &#x304C;&#x7ACB;&#x3063;&#x3066;&#x3044;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3067;&#x3001;&#x3069;&#x306E;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x304B;&#x3092;&#x5224;&#x5B9A;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<p><code>before_keyflag</code> &#x306B;&#x306F;&#x3001;1&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x524D;&#x306B;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x3092;&#x4FDD;&#x5B58;&#x3057;&#x307E;&#x3059;&#x3002;&#x306A;&#x305C;&#x3053;&#x306E;&#x5909;&#x6570;&#x304C;&#x5FC5;&#x8981;&#x306A;&#x306E;&#x3067;&#x3057;&#x3087;&#x3046;&#x304B;&#x3002;&#x305D;&#x308C;&#x306F;&#x3001;&#x30AD;&#x30FC;&#x306E;&#x62BC;&#x4E0B;&#x5224;&#x5B9A;&#x3092;&#x3001;JavaScript &#x3067;&#x53D6;&#x5F97;&#x3059;&#x308B;&#x306B;&#x306F;&#x3001;onkeyup &#x3068; onkeydown &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30CF;&#x30F3;&#x30C9;&#x30E9;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x306E;&#x3067;&#x3059;&#x304C;&#x3001;onkeydown &#x306F;&#x3001;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;&#x3001;&#x5B9F;&#x884C;&#x3055;&#x308C;&#x307E;&#x3059;&#x3002;&#x30DC;&#x30BF;&#x30F3;&#x304C;&#x62BC;&#x3057;&#x3063;&#x3071;&#x306A;&#x3057;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x5224;&#x5B9A;&#x3059;&#x308B;&#x5206;&#x306B;&#x306F;&#x3001;&#x4FBF;&#x5229;&#x306A;&#x306E;&#x3067;&#x3059;&#x304C;&#x3001;&#x30DC;&#x30BF;&#x30F3;&#x304C;&#x6700;&#x521D;&#x306B;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x6642;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;&#x5834;&#x5408;&#x3001;&#x73FE;&#x5728;&#x306E;&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x3067;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x3053;&#x3068;&#x3092;&#x78BA;&#x8A8D;&#x3057;&#x3001;1&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x524D;&#x306B;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x3044;&#x306A;&#x3044;&#x3053;&#x3068;&#x3092;&#x78BA;&#x8A8D;&#x3057;&#x306A;&#x3044;&#x3068;&#x3044;&#x3051;&#x306A;&#x3044;&#x304B;&#x3089;&#x3067;&#x3059;&#x3002;</p>
+<pre><code>Input.prototype.bindKey = function(){
+    var self = this;
+    window.onkeydown = function(e) { self.handleKeyDown(e); };
+    window.onkeyup   = function(e) { self.handleKeyUp(e); };
+};
+Input.prototype.saveBeforeKey = function(){
+    this.before_keyflag = this.keyflag;
+    this.keyflag = 0x0;
+}
+</code></pre><p>bindKey &#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x306F;&#x30B2;&#x30FC;&#x30E0;&#x304C;&#x8D77;&#x52D5;&#x3057;&#x305F;&#x6642;&#x306B;&#x6700;&#x521D;&#x306B;&#x4E00;&#x5EA6;&#x3060;&#x3051;&#x547C;&#x3073;&#x51FA;&#x3057;&#x307E;&#x3059;&#x3002;&#x30D6;&#x30E9;&#x30A6;&#x30B6;&#x306E;&#x30AD;&#x30FC;&#x5165;&#x529B;&#x3092;&#x3001;&#x53D6;&#x5F97;&#x3057;&#x3001;
+<code>KeyboardEvent</code> &#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x3092;&#x3001;<code>handleKeyDown</code> &#x53CA;&#x3073; <code>handleKeyUp</code> &#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x306B;&#x6E21;&#x3059;&#x8A2D;&#x5B9A;&#x3092;&#x884C;&#x3044;&#x307E;&#x3059;&#x3002;</p>
+<p><code>saveBeforeKey</code> &#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x306F;&#x3001;&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x51E6;&#x7406;&#x306E;&#x6700;&#x5F8C;&#x306B;&#x6BCE;&#x56DE;&#x5B9F;&#x884C;&#x3057;&#x307E;&#x3059;&#x3002;
+&#x5165;&#x529B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x306E;&#x5C65;&#x6B74;&#x3092;&#x4FDD;&#x5B58;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<pre><code>// &#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x3092;Bit&#x306B;&#x5909;&#x63DB;
+Input.prototype._keyCodeToBitCode = function(keyCode){
+    var flag;
+    switch(keyCode) {
+        case 16: // shift
+            flag = Constant.BUTTON_SHIFT;
+            break;
+        case 32: // space
+            flag = Constant.BUTTON_SPACE;
+            break;
+        case 37: // left
+            flag = Constant.BUTTON_LEFT;
+            break;
+        case 38: // up
+            flag = Constant.BUTTON_UP;
+            break;
+        case 39: // right
+            flag = Constant.BUTTON_RIGHT;
+            break;
+        case 40: // down
+            flag = Constant.BUTTON_DOWN;
+            break;
+        case 88: // x
+            flag = Constant.BUTTON_X;
+            break;
+        case 90: // z
+            flag = Constant.BUTTON_Z;
+            break;
+    }
+    return flag;
+};
+// &#x30AD;&#x30FC;&#x62BC;&#x4E0B;
+Input.prototype.handleKeyDown = function(e){
+    this.keyflag |= this._keyCodeToBitCode(e.keyCode);
+    e.preventDefault();
+};
+// &#x30AD;&#x30FC;&#x62BC;&#x4E0B;&#x89E3;&#x9664;
+Input.prototype.handleKeyUp = function(e){
+    this.keyflag &amp;= ~this._keyCodeToBitCode(e.keyCode);
+    e.preventDefault();
+};
+</code></pre><p><code>_keyCodeToBitCode</code> &#x95A2;&#x6570;&#x306F;&#x3001;onkeyup &#x3082;&#x3057;&#x304F;&#x306F; onkeydown &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x304C;&#x767A;&#x751F;&#x3057;&#x305F;&#x969B;&#x306B;&#x6E21;&#x3055;&#x308C;&#x308B;
+<code>KeyboardEvent</code> &#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306E; <code>keyCode</code> &#x3067;&#x3059;&#x3002;keyCode &#x306E;&#x3069;&#x306E;&#x5024;&#x304C;&#x3001;&#x30AD;&#x30FC;&#x30DC;&#x30FC;&#x30C9;&#x306E;
+&#x3069;&#x306E;&#x30AD;&#x30FC;&#x306B;&#x7D10;&#x3065;&#x304F;&#x304B;&#x306F;&#x3001;MDN(<a href="https://developer.mozilla.org/ja/docs/Web/API/KeyboardEvent/keyCode)&#x306A;&#x3069;&#x3092;&#x53C2;&#x7167;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;" target="_blank">https://developer.mozilla.org/ja/docs/Web/API/KeyboardEvent/keyCode)&#x306A;&#x3069;&#x3092;&#x53C2;&#x7167;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;</a></p>
+<p>handleKeyDown &#x306F;&#x3001;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x969B;&#x306B;&#x5B9F;&#x884C;&#x3055;&#x308C;&#x308B;&#x95A2;&#x6570;&#x3067;&#x3059;&#x3002;&#x5185;&#x90E8;&#x3067;&#x306F;&#x3001;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x3092; Bit &#x306B;&#x5909;&#x63DB;&#x3057;&#x3001;
+OR &#x6F14;&#x7B97;&#x5B50;&#x3092;&#x4F7F;&#x3063;&#x3066;&#x3001; keyflag &#x306B;&#x4FDD;&#x5B58;&#x3057;&#x3066;&#x3044;&#x307E;&#x3059;&#x3002;&#x30D3;&#x30C3;&#x30C8;&#x6F14;&#x7B97;&#x5B50;&#x306F;&#x3001;Web&#x30A8;&#x30F3;&#x30B8;&#x30CB;&#x30A2;&#x306B;&#x3068;&#x3063;&#x3066;&#x6163;&#x308C;&#x89AA;&#x3057;&#x307E;&#x306A;&#x3044;&#x3068;&#x601D;&#x3046;&#x306E;&#x3067;&#x3001;
+&#x8A73;&#x3057;&#x304F;&#x89E3;&#x8AAC;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<p>Z&#x30DC;&#x30BF;&#x30F3;&#x304C;&#x62BC;&#x3055;&#x308C;&#x308B;&#x3068;&#x3001;handleKeyDown &#x306F;&#x4EE5;&#x4E0B;&#x3092;&#x5B9F;&#x884C;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<pre><code>    //BUTTON_Z =&gt; 0b00010000
+    this.key_flag = 0b00000000 | 0b00010000;
+</code></pre><p>&#x5404;bit &#x305D;&#x308C;&#x305E;&#x308C;&#x306B;&#x3064;&#x3044;&#x3066;&#x3001;&#x3069;&#x3061;&#x3089;&#x304B;&#x7247;&#x65B9;&#x306E;&#x5024;&#x304C; 1 &#x3067;&#x3042;&#x308C;&#x3070;&#x3001;&#x305D;&#x306E;bit&#x306F;1&#x3068;&#x306A;&#x308A;&#x307E;&#x3059;&#x3002;
+&#x3064;&#x307E;&#x308A;&#x3001;key_flag &#x306F; <code>0b00010000</code> &#x3068;&#x306A;&#x308A;&#x307E;&#x3059;&#x3002;</p>
+<p>Z&#x30DC;&#x30BF;&#x30F3;&#x3068;&#x540C;&#x6642;&#x306B;X&#x30DC;&#x30BF;&#x30F3;&#x3082;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;&#x3069;&#x3046;&#x306A;&#x308B;&#x3067;&#x3057;&#x3087;&#x3046;&#x304B;</p>
+<pre><code>    //BUTTON_X =&gt; 0b00100000
+    this.key_flag = 0b00010000 | 0b00100000;
+</code></pre><p>&#x65E2;&#x306B;Z&#x30DC;&#x30BF;&#x30F3;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x306E;&#x3067;&#x3001;<code>0b00010000</code> &#x306B;&#x5BFE;&#x3057;&#x3066; OR &#x6F14;&#x7B97;&#x3092;&#x884C;&#x3044;&#x307E;&#x3059;&#x3002;
+&#x5404;&#x30D3;&#x30C3;&#x30C8;&#x306B;&#x5BFE;&#x3057;&#x3066;&#x3001;&#x7247;&#x65B9;&#x306E;&#x5024;&#x304C; 1 &#x306B;&#x306A;&#x308A;&#x307E;&#x3059;&#x3002;&#x3088;&#x3063;&#x3066;&#x3001;&#x65E2;&#x306B;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B; Z &#x30DC;&#x30BF;&#x30F3;&#x306E;&#x72B6;&#x614B;&#x306F;&#x6B8B;&#x3063;&#x305F;&#x307E;&#x307E;&#x3001;
+X&#x30DC;&#x30BF;&#x30F3;&#x3082;&#x62BC;&#x3055;&#x308C;&#x305F;&#x72B6;&#x614B;&#x306B;&#x306A;&#x308A;&#x307E;&#x3059;&#x3002;<code>0b00110000</code> &#x3068;&#x306A;&#x308A;&#x307E;&#x3059;&#x3002;</p>
+<p>handleKeyUp &#x306F;&#x3001;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x304C;&#x89E3;&#x9664;&#x3055;&#x308C;&#x305F;&#x969B;&#x306B;&#x5B9F;&#x884C;&#x3055;&#x308C;&#x308B;&#x95A2;&#x6570;&#x3067;&#x3059;&#x3002;
+&#x5185;&#x90E8;&#x3067;&#x306F;&#x3001;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x3092; Bit &#x306B;&#x5909;&#x63DB;&#x3057;&#x3001;&#x5426;&#x5B9A;&#x6F14;&#x7B97;&#x5B50;&#x3067;&#x3001;&#x30D3;&#x30C3;&#x30C8;&#x3092;&#x53CD;&#x8EE2;&#x3055;&#x305B;&#x3066;&#x304B;&#x3089;&#x3001;
+AND &#x6F14;&#x7B97;&#x5B50;&#x3092;&#x4F7F;&#x3063;&#x3066;&#x3001; keyflag &#x306B;&#x4FDD;&#x5B58;&#x3057;&#x3066;&#x3044;&#x307E;&#x3059;&#x3002;</p>
+<p>Z&#x30DC;&#x30BF;&#x30F3;&#x304C;&#x62BC;&#x3055;&#x308C;&#x308B;&#x306E;&#x304C;&#x89E3;&#x9664;&#x3055;&#x308C;&#x308B;&#x3068;&#x3001;handleKeyUp &#x306F;&#x4EE5;&#x4E0B;&#x3092;&#x5B9F;&#x884C;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<pre><code>    //  BUTTON_Z =&gt; 0b00010000
+    // ~BUTTON_Z =&gt; 0b11101111
+    this.key_flag = 0b00010000 &amp; 0b11101111;
+</code></pre><p>AND&#x6F14;&#x7B97;&#x5B50;&#x306F;&#x3001;&#x5404;bit &#x305D;&#x308C;&#x305E;&#x308C;&#x306B;&#x3064;&#x3044;&#x3066;&#x3001;&#x3069;&#x3061;&#x3089;&#x304B;&#x4E21;&#x65B9;&#x306E;&#x5024;&#x304C; 1 &#x3067;&#x3042;&#x308C;&#x3070;&#x3001;&#x305D;&#x306E;bit&#x306F;1&#x3068;&#x306A;&#x308A;&#x307E;&#x3059;&#x3002;
+&#x3064;&#x307E;&#x308A;&#x3001;key_flag &#x306F; <code>0b00000000</code> &#x3068;&#x306A;&#x308A;&#x307E;&#x3059;&#x3002;</p>
+<p>Z&#x30DC;&#x30BF;&#x30F3;&#x3068;&#x540C;&#x6642;&#x306B;X&#x30DC;&#x30BF;&#x30F3;&#x3082;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;&#x3069;&#x3046;&#x306A;&#x308B;&#x3067;&#x3057;&#x3087;&#x3046;&#x304B;</p>
+<pre><code>    //  BUTTON_X =&gt; 0b00100000
+    //  BUTTON_Z =&gt; 0b00010000
+    // ~BUTTON_Z =&gt; 0b11101111
+    this.key_flag = 0b00110000 &amp; 0b11101111;
+</code></pre><p>&#x65E2;&#x306B;Z, X&#x30DC;&#x30BF;&#x30F3;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x306E;&#x3067;&#x3001;<code>0b00110000</code> &#x306B;&#x5BFE;&#x3057;&#x3066; AND &#x6F14;&#x7B97;&#x3092;&#x884C;&#x3044;&#x307E;&#x3059;&#x3002;
+&#x7D50;&#x679C;&#x306F;&#x3001;<code>0b00100000</code> &#x3068;&#x306A;&#x308A;&#x3001;X&#x30DC;&#x30BF;&#x30F3;&#x3060;&#x3051;&#x62BC;&#x3055;&#x308C;&#x305F;&#x72B6;&#x614B;&#x306F;&#x6B8B;&#x3063;&#x305F;&#x307E;&#x307E;&#x3001;Z&#x30DC;&#x30BF;&#x30F3;&#x304C;&#x62BC;&#x3055;&#x308C;&#x305F;&#x72B6;&#x614B;&#x306F;&#x89E3;&#x9664;&#x3055;&#x308C;&#x307E;&#x3057;&#x305F;&#x3002;</p>
+<pre><code>// &#x6307;&#x5B9A;&#x306E;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x72B6;&#x614B;&#x304B;&#x78BA;&#x8A8D;&#x3059;&#x308B;
+Input.prototype.isKeyDown = function(flag){
+    return this.keyflag &amp; flag;
+};
+</code></pre><p>&#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x304B;&#x78BA;&#x8A8D;&#x3059;&#x308B;&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x3067;&#x3059;&#x3002;AND &#x6F14;&#x7B97;&#x5B50;&#x3092;&#x4F7F;&#x3046;&#x3053;&#x3068;&#x3067;&#x3001;
+&#x8A72;&#x5F53;&#x306E;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070; true &#x3092;&#x3001;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x306A;&#x3051;&#x308C;&#x3070;&#x3001; 0x0 &#x3064;&#x307E;&#x308A; false &#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<p>isKeyDown &#x306F;&#x62BC;&#x4E0B;&#x3055;&#x3048;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;&#x3001;&#x5E38;&#x306B; true &#x3092;&#x8FD4;&#x3057;&#x7D9A;&#x3051;&#x307E;&#x3059;&#x3002;&#x4F8B;&#x3048;&#x3070;&#x81EA;&#x6A5F;&#x306E;&#x30B7;&#x30E7;&#x30C3;&#x30C8;&#x3092;&#x6483;&#x3064;&#x969B;&#x306A;&#x3069;&#x306E;&#x5224;&#x5B9A;&#x306B;&#x306F;
+&#x5411;&#x3044;&#x3066;&#x3044;&#x307E;&#x3059;&#x304C;&#x3001;&#x6700;&#x521D;&#x306B;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x6642;&#x306B;&#x5B9F;&#x884C;&#x3057;&#x305F;&#x3044;&#x3053;&#x3068;(&#x30E1;&#x30CB;&#x30E5;&#x30FC;&#x306E;&#x6C7A;&#x5B9A;&#x306A;&#x3069;)&#x306E;&#x5224;&#x5B9A;&#x306B;&#x306F;&#x5411;&#x3044;&#x3066;&#x3044;&#x307E;&#x305B;&#x3093;&#x3002;
+&#x305D;&#x306E;&#x5834;&#x5408;&#x306F;&#x3001;isKeyPush &#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x3092;&#x4F7F;&#x7528;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<p>// &#x6307;&#x5B9A;&#x306E;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x304B;&#x78BA;&#x8A8D;&#x3059;&#x308B;
+Input.prototype.isKeyPush = function(flag){
+    // 1&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x524D;&#x306B;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x304A;&#x3089;&#x305A;&#x3001;&#x73FE;&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x3067;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x308B;&#x306A;&#x3089; true
+    return !(this.before_keyflag &amp; flag) &amp;&amp; this.keyflag &amp; flag;
+};</p>
+<pre><code>
+&#x6307;&#x5B9A;&#x306E;&#x30AD;&#x30FC;&#x304C;&#x6700;&#x521D;&#x306B;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x5224;&#x5B9A;&#x3057;&#x307E;&#x3059;&#x3002;
+&#x5185;&#x90E8;&#x3067;&#x306F;&#x3001;AND &#x6F14;&#x7B97;&#x5B50;&#x3092;&#x7528;&#x3044;&#x3066;&#x3001;&#x8A72;&#x5F53;&#x306E;&#x30AD;&#x30FC;&#x304C;&#x73FE;&#x5728;&#x306E;&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x3067;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x304A;&#x308A;&#x3001;
+1&#x3064;&#x524D;&#x306E;&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x3067;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x306A;&#x3051;&#x308C;&#x3070;&#x3001;true &#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;&#x3002;
+
+&#x3053;&#x306E;&#x4E00;&#x3064;&#x524D;&#x306E;&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x3067;&#x306E;&#x62BC;&#x4E0B;&#x3092;&#x5224;&#x5B9A;&#x3059;&#x308B;&#x305F;&#x3081;&#x306B;&#x3001;`before_keyflag` &#x3092;&#x4F7F;&#x7528;&#x3057;&#x3066;&#x3044;&#x308B;&#x306E;&#x3067;&#x3059;&#x3002;
+
+`src/game.js`
+</code></pre><p>var Game = function (canvas) {
+    this.input = new Input();
+    this.input.bindKey();</p>
+<pre><code>/* ~ &#x4EE5;&#x4E0B;&#x7701;&#x7565; ~ */
+</code></pre><p>};
+Game.prototype.run = function() {
+    /<em> ~ &#x4EE5;&#x4E0A;&#x7701;&#x7565; ~ </em>/</p>
+<pre><code>// &#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x3092;&#x4FDD;&#x5B58;&#x3057;&#x3066;&#x304A;&#x304F;
+this.input.saveBeforeKey();
+</code></pre><p>};</p>
+<pre><code>
+&#x6700;&#x5F8C;&#x306B;&#x3001;&#x30AD;&#x30FC;&#x5165;&#x529B;&#x3092;&#x53D7;&#x3051;&#x53D6;&#x308B;&#x305F;&#x3081;&#x306B;&#x3001;Game &#x30AF;&#x30E9;&#x30B9;&#x3092;&#x5C11;&#x3057;&#x4FEE;&#x6B63;&#x3057;&#x307E;&#x3059;&#x3002;
+
+## &#x305D;&#x308C;&#x4EE5;&#x5916;&#x306E;&#x30AD;&#x30FC;&#x60C5;&#x5831;&#x306E;&#x4FDD;&#x5B58;&#x65B9;&#x6CD5;
+
+&#x30AD;&#x30FC;&#x60C5;&#x5831;&#x306E;&#x4FDD;&#x5B58;&#x65B9;&#x6CD5;&#x306F;&#x3001;&#x3044;&#x304F;&#x3064;&#x304B;&#x7A2E;&#x985E;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;&#x3002;&#x524D;&#x8FF0;&#x3057;&#x305F;&#x306E;&#x306F;&#x3001;
+&#x300C;&#x524D;&#x306E;&#x62BC;&#x4E0B;&#x60C5;&#x5831;&#x3060;&#x3051;&#x3092;&#x4FDD;&#x5B58;&#x3057;&#x3066;&#x304A;&#x304F;&#x300D;&#x65B9;&#x6CD5;&#x3067;&#x3057;&#x305F;&#x3002;&#x3053;&#x308C;&#x306F;&#x3001;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x304B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x304B;&#x3092;
+&#x5224;&#x5B9A;&#x3059;&#x308B;&#x3060;&#x3051;&#x306E;&#x30B2;&#x30FC;&#x30E0;&#x3067;&#x3042;&#x308C;&#x3070;&#x3053;&#x306E;&#x65B9;&#x6CD5;&#x3067;&#x5145;&#x5206;&#x3067;&#x3059;&#x3002;
+
+&#x4ED6;&#x306E;&#x4FDD;&#x5B58;&#x65B9;&#x6CD5;&#x306B;&#x306F;&#x3001;&#x300C;&#x30B3;&#x30DE;&#x30F3;&#x30C9;&#x5C65;&#x6B74;&#x3092;&#x4FDD;&#x5B58;&#x3059;&#x308B;&#x300D;&#x300C;&#x62BC;&#x4E0B;&#x6642;&#x9593;&#x3082;&#x4FDD;&#x5B58;&#x3059;&#x308B;&#x300D;&#x65B9;&#x6CD5;&#x306A;&#x3069;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;&#x3002;
+&#x300C;&#x30B3;&#x30DE;&#x30F3;&#x30C9;&#x5C65;&#x6B74;&#x3092;&#x4FDD;&#x5B58;&#x3059;&#x308B;&#x300D;&#x65B9;&#x6CD5;&#x306F;&#x3001;&#x683C;&#x95D8;&#x30B2;&#x30FC;&#x30E0;&#x306A;&#x3069;&#x306E;&#x3001;&#x30D7;&#x30EC;&#x30A4;&#x30E4;&#x30FC;&#x304C;&#x5165;&#x529B;&#x3057;&#x305F;&#x30B3;&#x30DE;&#x30F3;&#x30C9;&#x5C65;&#x6B74;&#x3092;&#x53C2;&#x7167;&#x3059;&#x308B;&#x5834;&#x5408;&#x306B;&#x7528;&#x3044;&#x3089;&#x308C;&#x307E;&#x3059;&#x3002;
+&#x300C;&#x62BC;&#x4E0B;&#x6642;&#x9593;&#x3082;&#x4FDD;&#x5B58;&#x3059;&#x308B;&#x300D;&#x30BF;&#x30A4;&#x30D7;&#x306F;&#x3001;&#x4F8B;&#x3048;&#x3070;&#x30B7;&#x30E5;&#x30FC;&#x30C6;&#x30A3;&#x30F3;&#x30B0;&#x30B2;&#x30FC;&#x30E0;&#x306E;&#x30C1;&#x30E3;&#x30FC;&#x30B8;&#x30B7;&#x30E7;&#x30C3;&#x30C8;&#x306A;&#x3069;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x5834;&#x5408;&#x306B;&#x7528;&#x3044;&#x3089;&#x308C;&#x307E;&#x3059;&#x3002;
+
+# TODO: 
+&#x30B3;&#x30FC;&#x30C9;&#x4F8B;
+
+## &#x30B2;&#x30FC;&#x30E0;&#x30D1;&#x30C3;&#x30C9;&#x5165;&#x529B;
+
+&#x30B2;&#x30FC;&#x30E0;&#x30D1;&#x30C3;&#x30C9;(&#x30B2;&#x30FC;&#x30E0;&#x306E;&#x30B3;&#x30F3;&#x30C8;&#x30ED;&#x30FC;&#x30E9;&#x30FC;)&#x304B;&#x3089;&#x306E;&#x5165;&#x529B;&#x3082;&#x53D6;&#x5F97;&#x3067;&#x304D;&#x308B;&#x3088;&#x3046;&#x306B;&#x3057;&#x307E;&#x3059;&#x3002;
+HTML5 &#x306B;&#x306F; GamePad API &#x304C;&#x3042;&#x308B;&#x306E;&#x3067;&#x3001;&#x305D;&#x308C;&#x3092;&#x4F7F;&#x3063;&#x3066;&#x30B2;&#x30FC;&#x30E0;&#x30D1;&#x30C3;&#x30C9;&#x304B;&#x3089;&#x306E;&#x5165;&#x529B;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;&#x3002;
+
+`src/input.js`
+</code></pre><p>Input.prototype.handleGamePad = function() {
+    var pads = navigator.getGamepads();
+    var pad = pads[0]; // 1P&#x30B3;&#x30F3;</p>
+<pre><code>if(!pad) return;
+
+this.keyflag = 0x00;
+this.keyflag |= pad.buttons[0].pressed ? constant.BUTTON_Z:      0x00;
+this.keyflag |= pad.buttons[1].pressed ? constant.BUTTON_X:      0x00;
+
+this.keyflag |= pad.axes[1] &lt; -0.5 ? constant.BUTTON_UP:         0x00;
+this.keyflag |= pad.axes[1] &gt;  0.5 ? constant.BUTTON_DOWN:       0x00;
+this.keyflag |= pad.axes[0] &lt; -0.5 ? constant.BUTTON_LEFT:       0x00;
+this.keyflag |= pad.axes[0] &gt;  0.5 ? constant.BUTTON_RIGHT:      0x00;
+</code></pre><p>};</p>
+<pre><code>
+`handleGamePad` &#x95A2;&#x6570;&#x306F;&#x3001;&#x30B2;&#x30FC;&#x30E0;&#x30D1;&#x30C3;&#x30C9;&#x304B;&#x3089;&#x306E;&#x5165;&#x529B;&#x3092;&#x53D7;&#x3051;&#x53D6;&#x3063;&#x3066;&#x3001;`keyflag` &#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x3092;&#x66F4;&#x65B0;&#x3059;&#x308B;&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x3067;&#x3059;&#x3002;
+
+`navigator.getGamepads` &#x95A2;&#x6570;&#x306B;&#x3088;&#x308A;&#x3001;&#x30B2;&#x30FC;&#x30E0;&#x30D1;&#x30C3;&#x30C9;&#x306E;&#x60C5;&#x5831;&#x3092;&#x53D6;&#x5F97;&#x3067;&#x304D;&#x307E;&#x3059;&#x3002;`navigator.getGamepads` &#x306F;&#x3001;
+&#x914D;&#x5217;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;&#x3002;&#x8907;&#x6570;&#x306E;&#x30B2;&#x30FC;&#x30E0;&#x30D1;&#x30C3;&#x30C9;&#x304C;&#x63A5;&#x7D9A;&#x3055;&#x308C;&#x3066;&#x3044;&#x305F;&#x5834;&#x5408;&#x306B;&#x3082;&#x305D;&#x308C;&#x305E;&#x308C;&#x306E;&#x30B2;&#x30FC;&#x30E0;&#x30D1;&#x30C3;&#x30C9;&#x306E;&#x5024;&#x304C;&#x53D6;&#x5F97;&#x3067;&#x304D;&#x308B;&#x3088;&#x3046;&#x306B;&#x3001;
+`navigator.getGamepads` &#x306F;&#x914D;&#x5217;&#x3092;&#x8FD4;&#x3059;&#x3088;&#x3046;&#x306B;&#x306A;&#x3063;&#x3066;&#x3044;&#x308B;&#x306E;&#x3067;&#x3059;&#x3002;&#x4ECA;&#x56DE;&#x306F;1P&#x30B3;&#x30F3;&#x30C8;&#x30ED;&#x30FC;&#x30E9;&#x3057;&#x304B;&#x4F7F;&#x7528;&#x3057;&#x306A;&#x3044;&#x306E;&#x3067;&#x3001;
+`pads[0]` &#x306E;&#x307F;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;&#x3002;
+
+`pad` &#x5909;&#x6570;&#x306B;&#x306F;&#x3001;`pad.buttons` &#x3068;&#x3001;`pad.axes` &#x304C;&#x3042;&#x308A;&#x307E;&#x3059;&#x3002;buttons &#x306F;&#x5404;&#x7A2E;&#x30DC;&#x30BF;&#x30F3;&#x3001;axes &#x306F;&#x5404;&#x7A2E;&#x65B9;&#x5411;&#x30AD;&#x30FC;&#x3067;&#x3059;&#x3002;
+&#x4ECA;&#x56DE;&#x306F;&#x3001;`buttons[0]` &#x3092;&#x3001;&#x30AD;&#x30FC;&#x30DC;&#x30FC;&#x30C9;&#x306E;Z&#x30DC;&#x30BF;&#x30F3;&#x3068;&#x540C;&#x7B49;&#x306B;&#x3001;`buttons[1]` &#x3092;&#x30AD;&#x30FC;&#x30DC;&#x30FC;&#x30C9;&#x306E;X&#x30DC;&#x30BF;&#x30F3;&#x3068;&#x540C;&#x7B49;&#x306B;&#x6271;&#x3044;&#x307E;&#x3059;&#x3002;
+
+`pad.axes` &#x306F;&#x3001;2&#x3064;&#x306E;&#x5024;&#x306E;&#x914D;&#x5217;&#x3067;&#x3042;&#x308A;&#x3001;&#x305D;&#x308C;&#x305E;&#x308C; -1 ~ 1 &#x306E;&#x5024;&#x3092;&#x53D6;&#x308A;&#x307E;&#x3059;&#x3002;
+&#x3053;&#x308C;&#x306F;&#x3001;&#x30B9;&#x30C6;&#x30A3;&#x30C3;&#x30AF;&#x3092;&#x3069;&#x306E;&#x65B9;&#x5411;&#x306B;&#x3069;&#x308C;&#x3060;&#x3051;&#x5012;&#x3057;&#x305F;&#x304B;&#x306B;&#x3088;&#x308A;&#x307E;&#x3059;&#x3002;
+
+
+# TODO:
+&#x30B9;&#x30C6;&#x30A3;&#x30C3;&#x30AF;&#x3068;&#x5341;&#x5B57;&#x30AD;&#x30FC;&#x306E;&#x9055;&#x3044;&#x306B;&#x3064;&#x3044;&#x3066;&#x89E3;&#x8AAC;
+
+
+`src/game.js`
+</code></pre><p>Game.prototype.run = function() {
+    this.input.handleGamePad();
+    /<em> ~ &#x4EE5;&#x4E0B;&#x7701;&#x7565; ~ </em>/
+};
+```</p>
+<p>&#x6700;&#x5F8C;&#x306B;&#x3001;Game &#x30AF;&#x30E9;&#x30B9;&#x306E; run &#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x5185;&#x3067;&#x3001;<code>handleGamePad</code> &#x3092;&#x547C;&#x3073;&#x51FA;&#x3057;&#x307E;&#x3059;&#x3002;
+&#x3053;&#x308C;&#x3067;&#x3001;&#x30B2;&#x30FC;&#x30E0;&#x30D7;&#x30ED;&#x30B0;&#x30E9;&#x30E0;&#x304B;&#x3089;&#x3001;&#x30B2;&#x30FC;&#x30E0;&#x30D1;&#x30C3;&#x30C9;&#x306E;&#x5024;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;&#x3053;&#x3068;&#x304C;&#x3067;&#x304D;&#x307E;&#x3059;&#x3002;</p>
 
                                 
                                 </section>
@@ -868,7 +1161,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"入力","level":"1.6","depth":1,"next":{"title":"キーボード入力","level":"1.6.1","depth":2,"anchor":"#キーボード入力","path":"input.md","ref":"input.md#キーボード入力","articles":[]},"previous":{"title":"スプライトアニメーション","level":"1.5.3","depth":2,"anchor":"#スプライトアニメーション","path":"render.md","ref":"render.md#スプライトアニメーション","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"input.md","mtime":"2017-02-07T11:56:48.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-07T11:16:07.287Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"入力","level":"1.6","depth":1,"next":{"title":"キーボード入力","level":"1.6.1","depth":2,"anchor":"#キーボード入力","path":"input.md","ref":"input.md#キーボード入力","articles":[]},"previous":{"title":"スプライトアニメーション","level":"1.5.3","depth":2,"anchor":"#スプライトアニメーション","path":"render.md","ref":"render.md#スプライトアニメーション","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"input.md","mtime":"2017-02-20T14:45:11.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-07T11:16:07.287Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

@@ -60,7 +60,7 @@
     <link rel="next" href="move.html" />
     
     
-    <link rel="prev" href="input.html" />
+    <link rel="prev" href="create_object.html" />
     
 
     </head>
@@ -328,65 +328,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.7" data-path="move.html">
-            
-                <a href="move.html">
-            
-                    
-                    移動
-            
-                </a>
-            
-
-            
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.7.1" data-path="move.html">
-            
-                <a href="move.html#キャラ移動">
-            
-                    
-                    キャラ移動
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.2" data-path="move.html">
-            
-                <a href="move.html#vector">
-            
-                    
-                    vector
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.3" data-path="move.html">
-            
-                <a href="move.html#aimed">
-            
-                    
-                    aimed
-            
-                </a>
-            
-
-            
-        </li>
-    
-
-            </ul>
-            
-        </li>
-    
-        <li class="chapter " data-level="1.8" data-path="create_object.html">
+        <li class="chapter " data-level="1.7" data-path="create_object.html">
             
                 <a href="create_object.html">
             
@@ -400,7 +342,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.8.1" data-path="create_object.html">
+        <li class="chapter " data-level="1.7.1" data-path="create_object.html">
             
                 <a href="create_object.html#ショット">
             
@@ -413,12 +355,70 @@
             
         </li>
     
-        <li class="chapter " data-level="1.8.2" data-path="create_object.html">
+        <li class="chapter " data-level="1.7.2" data-path="create_object.html">
             
                 <a href="create_object.html#敵">
             
                     
                     敵
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.8" data-path="move.html">
+            
+                <a href="move.html">
+            
+                    
+                    移動
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="move.html">
+            
+                <a href="move.html#キャラ移動">
+            
+                    
+                    キャラ移動
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="move.html">
+            
+                <a href="move.html#vector">
+            
+                    
+                    vector
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="move.html">
+            
+                <a href="move.html#aimed">
+            
+                    
+                    aimed
             
                 </a>
             
@@ -825,6 +825,54 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="&#x79FB;&#x52D5;">&#x79FB;&#x52D5;</h1>
+<p>&#x672C;&#x7A3F;&#x3067;&#x306F;&#x3001;&#x753B;&#x9762;&#x5185;&#x306E;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306E;&#x79FB;&#x52D5;&#x306B;&#x3064;&#x3044;&#x3066;&#x66F8;&#x304D;&#x305F;&#x3044;&#x3068;&#x601D;&#x3044;&#x307E;&#x3059;&#x3002;</p>
+<h2 id="&#x30AD;&#x30E3;&#x30E9;&#x79FB;&#x52D5;">&#x30AD;&#x30E3;&#x30E9;&#x79FB;&#x52D5;</h2>
+<p>&#x5165;&#x529B;&#x306E;&#x9805;&#x76EE;&#x3088;&#x308A;&#x3001;&#x30D7;&#x30EC;&#x30A4;&#x30E4;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30DC;&#x30FC;&#x30C9;&#x3042;&#x308B;&#x3044;&#x306F;&#x30B2;&#x30FC;&#x30E0;&#x30D1;&#x30C3;&#x30C9;&#x304B;&#x3089;&#x60C5;&#x5831;&#x3092;&#x53D6;&#x5F97;&#x3067;&#x304D;&#x308B;&#x3088;&#x3046;&#x306B;&#x306A;&#x308A;&#x307E;&#x3057;&#x305F;&#x3002;
+&#x305D;&#x308C;&#x3067;&#x306F;&#x3001;&#x30D7;&#x30EC;&#x30A4;&#x30E4;&#x30FC;&#x306E;&#x5165;&#x529B;&#x3092;&#x5143;&#x306B;&#x3001;&#x30AD;&#x30E3;&#x30E9;&#x306E;&#x79FB;&#x52D5;&#x3092;&#x5B9F;&#x88C5;&#x3057;&#x3088;&#x3046;&#x3068;&#x601D;&#x3044;&#x307E;&#x3059;&#x3002;
+<code>src/js/chara.js</code></p>
+<pre><code>var Constant = require(&quot;../constant&quot;);
+var SPEED = 2;
+Character.prototype.run = function(){
+    /* ~ &#x4EE5;&#x4E0A;&#x7701;&#x7565; ~ */
+    // &#x81EA;&#x6A5F;&#x79FB;&#x52D5;
+    if(this.core.input.isKeyDown(Constant.BUTTON_LEFT)) {
+        this.x -= SPEED;
+    }
+    if(this.core.input.isKeyDown(Constant.BUTTON_RIGHT)) {
+        this.x += SPEED;
+    }
+    if(this.core.input.isKeyDown(Constant.BUTTON_DOWN)) {
+        this.y += SPEED;
+    }
+    if(this.core.input.isKeyDown(Constant.BUTTON_UP)) {
+        this.y -= SPEED;
+    }
+
+    // &#x753B;&#x9762;&#x5916;&#x306B;&#x51FA;&#x3055;&#x305B;&#x306A;&#x3044;
+    this.forbidOutOfStage();
+};
+// &#x753B;&#x9762;&#x5916;&#x306B;&#x51FA;&#x3055;&#x305B;&#x306A;&#x3044;
+Character.prototype.forbidOutOfStage = function(){
+    if(this.x &lt; 0) {
+        this.x = 0;
+    }
+    if(this.x &gt; this.scene.width) {
+        this.x = this.core.width;
+    }
+    if(this.y &lt; 0) {
+        this.y = 0;
+    }
+    if(this.y &gt; this.core.height) {
+        this.y = this.core.height;
+    }
+};
+</code></pre><p>run &#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x5185;&#x3067;&#x3001;&#x30D7;&#x30EC;&#x30A4;&#x30E4;&#x30FC;&#x306E;&#x5165;&#x529B;&#x3092;&#x53D7;&#x3051;&#x53D6;&#x3063;&#x3066;&#x3001;&#x81EA;&#x6A5F;&#x306E;x, y&#x5EA7;&#x6A19;&#x3092;&#x79FB;&#x52D5;&#x3055;&#x305B;&#x3066;&#x3044;&#x307E;&#x3059;&#x3002;
+&#x307E;&#x305F;&#x3001;forbidOutOfStage &#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x306B;&#x3088;&#x308A;&#x3001;&#x81EA;&#x6A5F;&#x304C;&#x753B;&#x9762;&#x306E;&#x5916;&#x306B;&#x51FA;&#x3066;&#x3057;&#x307E;&#x308F;&#x306A;&#x3044;&#x3088;&#x3046;&#x306B;&#x3001;
+&#x753B;&#x9762;&#x5916;&#x306B;&#x51FA;&#x3066;&#x3057;&#x307E;&#x3063;&#x305F;&#x3089;&#x3001;&#x753B;&#x9762;&#x5185;&#x306B;&#x5EA7;&#x6A19;&#x3092;&#x623B;&#x3059;&#x3088;&#x3046;&#x306B;&#x4FEE;&#x6B63;&#x3057;&#x3066;&#x3044;&#x307E;&#x3059;&#x3002;</p>
+<h2 id="vector">vector</h2>
+<p>&#x79FB;&#x52D5;&#x3067;&#x3059;&#x304C;&#x3001;x, y &#x5EA7;&#x6A19;&#x306E;&#x52A0;&#x7B97;&#xFF0F;&#x6E1B;&#x7B97;&#x3060;&#x3051;&#x3060;&#x3068;&#x3001;&#x659C;&#x3081;&#x65B9;&#x5411;&#x306E;&#x79FB;&#x52D5;&#x7B49;&#x3001;&#x7D30;&#x304B;&#x3044;&#x79FB;&#x52D5;&#x3092;&#x3059;&#x308B;&#x306B;&#x306F;&#x4E0D;&#x4FBF;&#x3067;&#x3059;&#x3002;
+&#x300C;&#x901F;&#x5EA6;&#x300D;&#x300C;&#x89D2;&#x5EA6;&#x300D;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;&#x3053;&#x3068;&#x3067;&#x79FB;&#x52D5;&#x3067;&#x304D;&#x308B;&#x3068;&#x4FBF;&#x5229;&#x3067;&#x3059;&#x3002;</p>
+<h2 id="aimed">aimed</h2>
 
                                 
                                 </section>
@@ -852,7 +900,7 @@
 
             
                 
-                <a href="input.html#押した時判定" class="navigation navigation-prev " aria-label="Previous page: 押した時判定">
+                <a href="create_object.html#敵" class="navigation navigation-prev " aria-label="Previous page: 敵">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -868,7 +916,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"移動","level":"1.7","depth":1,"next":{"title":"キャラ移動","level":"1.7.1","depth":2,"anchor":"#キャラ移動","path":"move.md","ref":"move.md#キャラ移動","articles":[]},"previous":{"title":"押した時判定","level":"1.6.4","depth":2,"anchor":"#押した時判定","path":"input.md","ref":"input.md#押した時判定","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"move.md","mtime":"2017-02-07T11:56:48.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-07T11:16:07.287Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"移動","level":"1.8","depth":1,"next":{"title":"キャラ移動","level":"1.8.1","depth":2,"anchor":"#キャラ移動","path":"move.md","ref":"move.md#キャラ移動","articles":[]},"previous":{"title":"敵","level":"1.7.2","depth":2,"anchor":"#敵","path":"create_object.md","ref":"create_object.md#敵","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"move.md","mtime":"2017-02-25T06:17:10.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-07T11:16:07.287Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
