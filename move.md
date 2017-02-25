@@ -82,7 +82,7 @@ ObjectBase.prototype.update = function () {
 	/* ~以上省略 ~ */
 
 	this.move();
-}
+};
 ObjectBase.prototype.move = function() {
 	if (this.speed === 0) return;
 
@@ -110,6 +110,9 @@ speed * cos(θ) を計算すると、θ方向に speed 移動する際に、x �
 同じく、
 speed * sin(θ) を計算すると、θ方向に speed 移動する際に、y 座標はどのくらい進むのかわかります。
 
+なお、JavaScript の sin cos 関数は、θではなく、ラジアンを渡さないといけないので、
+Util.thetaToRadian 関数により、θからラジアンに変換しています。
+
 # TODO:
 sin cos 関係の図
 
@@ -135,4 +138,53 @@ Chara.prototype.update = function () {
 
 
 ## aimed
+
+自機狙いなど、ある特定の位置に向かって移動するにはどうすればいいでしょうか。
+移動自体は、setMove に speed と theta を渡してあげればいいでしょう。
+
+オブジェクトは、自分の今の位置(x, y)と、移動先の(x, y)座標を元に、
+theta つまりどの角度に移動するのかを計算してあげれば良さそうです。
+
+今回のゲームでは実装しませんが、
+移動先に向かって、移動する実装をしてみます。
+
+`src/js/util.js`
+```
+Util.radianToTheta = function(radian) {
+	return (radian * 180 / Math.PI) | 0;
+};
+```
+
+`src/js/object/base.js`
+```
+ObjectBase.prototype.setAimTo = function(x, y) {
+	var ax = x - this.x;
+	var ay = y - this.y;
+
+	var theta = Util.radianToTheta(Math.atan2(ay, ax));
+	return theta;
+};
+```
+
+JavaScript には atan2 関数があるので、これを使うことで、2つの(x, y)座標から、
+どの方向に向かうかの角度を取得することができます。
+ただし、atan2 から返ってきた角度は、ラジアンなので、θに変換する必要があります。
+
+これで例えば、敵を自機に向かって移動させたい場合は、
+
+`src/js/object/enemy.js`
+```
+Enemy.prototype.update = function () {
+	/* ~以上省略 ~ */
+
+	if (this.frame_count % 60 === 0) {
+		this.setAimTo(this.scene.chara.x, this.scene.chara.y);
+	}
+};
+```
+
+とすることで、自機に向かって移動してくる敵にすることができます。
+
+毎フレーム、自機の移動先を計算すると処理に時間がかかるので、60フレームごとに
+自機の位置を取得して、向かう先を修正しています。
 
