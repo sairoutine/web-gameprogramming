@@ -825,6 +825,69 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="bgmse&#x518D;&#x751F;">BGM/SE&#x518D;&#x751F;</h1>
+<p>Web&#x4E0A;&#x3067;&#x306E;&#x97F3;&#x58F0;&#x306E;&#x518D;&#x751F;&#x306F;&#x3001;HTML5 Audio &#x3092;&#x4F7F;&#x3046;&#x65B9;&#x6CD5;&#x3068;&#x3001;Web Audio &#x3092;&#x4F7F;&#x3046;&#x65B9;&#x6CD5;&#x306E;&#x4E8C;&#x7A2E;&#x985E;&#x304C;&#x5B58;&#x5728;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<p>HTML5 Audio &#x306F;&#x3001;&#x3044;&#x308F;&#x3086;&#x308B;<audio>&#x30BF;&#x30B0;&#x3092;&#x4F5C;&#x6210;&#x3057;&#x3001;&#x305D;&#x308C;&#x3092;&#x5229;&#x7528;&#x3057;&#x3066;&#x3001;&#x518D;&#x751F;&#x3057;&#x307E;&#x3059;&#x3002;
+&#x7C21;&#x5358;&#x306B;&#x97F3;&#x58F0;&#x304C;&#x518D;&#x751F;&#x3067;&#x304D;&#x308B;&#x4EE3;&#x308F;&#x308A;&#x306B;&#x3001;&#x7D30;&#x304B;&#x3044;&#x5236;&#x5FA1;&#x304C;&#x3067;&#x304D;&#x307E;&#x305B;&#x3093;&#x3002;</audio></p>
+<p>Web Audio &#x306F;&#x3001;JavaScript &#x306E; API &#x3067;&#x3059;&#x3002;&#x7D30;&#x304B;&#x3044;&#x5236;&#x5FA1;&#x304C;&#x3067;&#x304D;&#x308B;&#x4EE3;&#x308F;&#x308A;&#x306B;&#x3001;
+&#x77E5;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;&#x306A;&#x3089;&#x306A;&#x3044;&#x3053;&#x3068;&#x304C;&#x5897;&#x3048;&#x307E;&#x3059;&#x3002;</p>
+<h1 id="html5-audio">HTML5 Audio</h1>
+<pre><code>var element = new Audio();
+element.addEventListener(&apos;canplay&apos;, function(e) {
+    // &#x97F3;&#x58F0;&#x30C7;&#x30FC;&#x30BF;&#x306E;&#x518D;&#x751F;&#x304C;&#x53EF;&#x80FD;&#x306B;&#x306A;&#x3063;&#x305F;&#x3089;
+});
+element.src = &quot;./path/to/file.mp3&quot;; // &#x97F3;&#x58F0;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x6307;&#x5B9A;
+element.volume = 1.0; // &#x97F3;&#x91CF; 0.0 ~ 1.0
+element.loop = false; // &#x30EB;&#x30FC;&#x30D7;&#x3059;&#x308B;&#x304B;&#x5426;&#x304B;
+element.currentTime = 0; // &#x518D;&#x751F;&#x4F4D;&#x7F6E;&#x306E;&#x6307;&#x5B9A;
+element.load(); // src &#x3067;&#x6307;&#x5B9A;&#x3057;&#x305F;&#x97F3;&#x58F0;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x8AAD;&#x307F;&#x8FBC;&#x307F;&#x3092;&#x958B;&#x59CB;&#x3059;&#x308B;
+element.pause(); // &#x518D;&#x751F;&#x306E;&#x505C;&#x6B62;
+element.play(); // &#x518D;&#x751F;&#x306E;&#x505C;&#x6B62;
+</code></pre><p>HTML5 Audio &#x306E;&#x4F7F;&#x3044;&#x65B9;&#x306F;&#x4E0A;&#x8A18;&#x306E;&#x3088;&#x3046;&#x306B;&#x306A;&#x308A;&#x307E;&#x3059;&#x3002;
+&#x30D6;&#x30E9;&#x30A6;&#x30B6;&#x306E;&#x7A2E;&#x985E;&#x306B;&#x3082;&#x3088;&#x308A;&#x307E;&#x3059;&#x304C;&#x3001;mp3 &#x3084; wav, ogg, m4a &#x7B49;&#x304C;&#x518D;&#x751F;&#x3067;&#x304D;&#x307E;&#x3059;&#x3002;</p>
+<p>HTML5 Audio &#x306F;&#x975E;&#x5E38;&#x306B;&#x7C21;&#x5358;&#x306B;&#x97F3;&#x58F0;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x518D;&#x751F;&#x3092;&#x884C;&#x3046;&#x3053;&#x3068;&#x304C;&#x3067;&#x304D;&#x307E;&#x3059;&#x304C;&#x3001;
+BGM&#x306E;&#x30EB;&#x30FC;&#x30D7;&#x306E;&#x958B;&#x59CB;&#x4F4D;&#x7F6E;&#xFF0F;&#x7D42;&#x4E86;&#x4F4D;&#x7F6E;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;&#x3053;&#x3068;&#x304C;&#x3067;&#x304D;&#x307E;&#x305B;&#x3093;&#x3002;</p>
+<p>&#x305D;&#x306E;&#x305F;&#x3081;&#x3001;&#x3061;&#x3087;&#x3063;&#x3068;&#x3084;&#x3084;&#x3053;&#x3057;&#x3044;&#x6982;&#x5FF5;&#x306F;&#x51FA;&#x3066;&#x304D;&#x307E;&#x3059;&#x304C;&#x3001;Web Audio &#x3092;&#x4F7F;&#x7528;&#x3057;&#x3066;&#x3001;
+BGM&#x3084;SE&#x3092;&#x518D;&#x751F;&#x3057;&#x305F;&#x3044;&#x3068;&#x601D;&#x3044;&#x307E;&#x3059;&#x3002;</p>
+<h1 id="web-audio">Web Audio</h1>
+<h2 id="&#x97F3;&#x58F0;&#x306E;&#x8AAD;&#x307F;&#x8FBC;&#x307F;">&#x97F3;&#x58F0;&#x306E;&#x8AAD;&#x307F;&#x8FBC;&#x307F;</h2>
+<p><code>src/asset_loader/image.js</code></p>
+<pre><code>var ImageLoader = function(game) {
+    this.images = {};
+
+    this.loading_image_num = 0;
+    this.loaded_image_num = 0;
+};
+ImageLoader.prototype.loadImage = function(name, path) {
+    var self = this;
+
+    self.loading_image_num++;
+
+    // it&apos;s done to load image
+    var onload_function = function() {
+        self.loaded_image_num++;
+    };
+
+    var image = new Image();
+    image.src = path;
+    image.onload = onload_function;
+    this.images[name] = image;
+};
+
+ImageLoader.prototype.isAllLoaded = function() {
+    return this.loaded_image_num &gt; 0 &amp;&amp; this.loaded_image_num === this.loading_image_num;
+};
+
+ImageLoader.prototype.get = function(name) {
+    return this.images[name];
+};
+ImageLoader.prototype.remove = function(name) {
+    delete this.images[name];
+};
+
+
+module.exports = ImageLoader;
+</code></pre><h2 id="se&#x3092;&#x518D;&#x751F;&#x3059;&#x308B;&#x3068;&#x304D;&#x306F;&#x4E00;&#x65E6;&#x30D5;&#x30E9;&#x30B0;&#x7ACB;&#x3066;&#x308B;">SE&#x3092;&#x518D;&#x751F;&#x3059;&#x308B;&#x3068;&#x304D;&#x306F;&#x4E00;&#x65E6;&#x30D5;&#x30E9;&#x30B0;&#x7ACB;&#x3066;&#x308B;</h2>
+<h2 id="&#x30D5;&#x30A7;&#x30FC;&#x30C9;&#x30A4;&#x30F3;&#xFF0F;&#x30D5;&#x30A7;&#x30FC;&#x30C9;&#x30A2;&#x30A6;&#x30C8;">&#x30D5;&#x30A7;&#x30FC;&#x30C9;&#x30A4;&#x30F3;&#xFF0F;&#x30D5;&#x30A7;&#x30FC;&#x30C9;&#x30A2;&#x30A6;&#x30C8;</h2>
 
                                 
                                 </section>
@@ -868,7 +931,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"BGM/SE再生","level":"1.10","depth":1,"next":{"title":"SEを再生するときは一旦フラグ立てる","level":"1.10.1","depth":2,"anchor":"#SEを再生するときは一旦フラグ立てる","path":"bgm.md","ref":"bgm.md#SEを再生するときは一旦フラグ立てる","articles":[]},"previous":{"title":"円同士の判定","level":"1.9.2","depth":2,"anchor":"#円同士の判定","path":"collision.md","ref":"collision.md#円同士の判定","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"bgm.md","mtime":"2017-02-07T11:56:48.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-07T11:16:07.287Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"BGM/SE再生","level":"1.10","depth":1,"next":{"title":"SEを再生するときは一旦フラグ立てる","level":"1.10.1","depth":2,"anchor":"#SEを再生するときは一旦フラグ立てる","path":"bgm.md","ref":"bgm.md#SEを再生するときは一旦フラグ立てる","articles":[]},"previous":{"title":"円同士の判定","level":"1.9.2","depth":2,"anchor":"#円同士の判定","path":"collision.md","ref":"collision.md#円同士の判定","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"bgm.md","mtime":"2017-02-26T14:55:22.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-07T11:16:07.287Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

@@ -895,7 +895,7 @@ ObjectBase.prototype.update = function () {
     /* ~&#x4EE5;&#x4E0A;&#x7701;&#x7565; ~ */
 
     this.move();
-}
+};
 ObjectBase.prototype.move = function() {
     if (this.speed === 0) return;
 
@@ -916,6 +916,8 @@ ObjectBase.prototype.setMove = function(speed, theta) {
 <p>speed <em> cos(&#x3B8;) &#x3092;&#x8A08;&#x7B97;&#x3059;&#x308B;&#x3068;&#x3001;&#x3B8;&#x65B9;&#x5411;&#x306B; speed &#x79FB;&#x52D5;&#x3059;&#x308B;&#x969B;&#x306B;&#x3001;x &#x5EA7;&#x6A19;&#x306F;&#x3069;&#x306E;&#x304F;&#x3089;&#x3044;&#x9032;&#x3080;&#x306E;&#x304B;&#x308F;&#x304B;&#x308A;&#x307E;&#x3059;&#x3002;
 &#x540C;&#x3058;&#x304F;&#x3001;
 speed </em> sin(&#x3B8;) &#x3092;&#x8A08;&#x7B97;&#x3059;&#x308B;&#x3068;&#x3001;&#x3B8;&#x65B9;&#x5411;&#x306B; speed &#x79FB;&#x52D5;&#x3059;&#x308B;&#x969B;&#x306B;&#x3001;y &#x5EA7;&#x6A19;&#x306F;&#x3069;&#x306E;&#x304F;&#x3089;&#x3044;&#x9032;&#x3080;&#x306E;&#x304B;&#x308F;&#x304B;&#x308A;&#x307E;&#x3059;&#x3002;</p>
+<p>&#x306A;&#x304A;&#x3001;JavaScript &#x306E; sin cos &#x95A2;&#x6570;&#x306F;&#x3001;&#x3B8;&#x3067;&#x306F;&#x306A;&#x304F;&#x3001;&#x30E9;&#x30B8;&#x30A2;&#x30F3;&#x3092;&#x6E21;&#x3055;&#x306A;&#x3044;&#x3068;&#x3044;&#x3051;&#x306A;&#x3044;&#x306E;&#x3067;&#x3001;
+Util.thetaToRadian &#x95A2;&#x6570;&#x306B;&#x3088;&#x308A;&#x3001;&#x3B8;&#x304B;&#x3089;&#x30E9;&#x30B8;&#x30A2;&#x30F3;&#x306B;&#x5909;&#x63DB;&#x3057;&#x3066;&#x3044;&#x307E;&#x3059;&#x3002;</p>
 <h1 id="todo">TODO:</h1>
 <p>sin cos &#x95A2;&#x4FC2;&#x306E;&#x56F3;</p>
 <p><code>src/js/object/chara.js</code></p>
@@ -935,6 +937,39 @@ Chara.prototype.update = function () {
 </code></pre><p>&#x4E0A;&#x8A18;&#x306E;&#x3088;&#x3046;&#x306B;&#x3001;&#x30AD;&#x30E3;&#x30E9;&#x30AF;&#x30E9;&#x30B9;&#x5185;&#x3067;&#x3001;&#x30B7;&#x30E7;&#x30C3;&#x30C8;&#x3092;&#x751F;&#x6210;&#x3059;&#x308B;&#x969B;&#x306B;&#x3001;&#x30B7;&#x30E7;&#x30C3;&#x30C8;&#x306E;&#x89D2;&#x5EA6;&#x3068;&#x901F;&#x5EA6;&#x3092;&#x8A2D;&#x5B9A;&#x3057;&#x3066;&#x3042;&#x3052;&#x307E;&#x3059;&#x3002;
 &#x3053;&#x308C;&#x3067;&#x3001;Z&#x30DC;&#x30BF;&#x30F3;&#x3092;&#x62BC;&#x3059;&#x3068;&#x3001;&#x81EA;&#x6A5F;&#x304B;&#x3089;&#x5F3E;&#x3092;&#x767A;&#x5C04;&#x3059;&#x308B;&#x3088;&#x3046;&#x306B;&#x306A;&#x3063;&#x305F;&#x3068;&#x601D;&#x3044;&#x307E;&#x3059;&#x3002;</p>
 <h2 id="aimed">aimed</h2>
+<p>&#x81EA;&#x6A5F;&#x72D9;&#x3044;&#x306A;&#x3069;&#x3001;&#x3042;&#x308B;&#x7279;&#x5B9A;&#x306E;&#x4F4D;&#x7F6E;&#x306B;&#x5411;&#x304B;&#x3063;&#x3066;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x306B;&#x306F;&#x3069;&#x3046;&#x3059;&#x308C;&#x3070;&#x3044;&#x3044;&#x3067;&#x3057;&#x3087;&#x3046;&#x304B;&#x3002;
+&#x79FB;&#x52D5;&#x81EA;&#x4F53;&#x306F;&#x3001;setMove &#x306B; speed &#x3068; theta &#x3092;&#x6E21;&#x3057;&#x3066;&#x3042;&#x3052;&#x308C;&#x3070;&#x3044;&#x3044;&#x3067;&#x3057;&#x3087;&#x3046;&#x3002;</p>
+<p>&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306F;&#x3001;&#x81EA;&#x5206;&#x306E;&#x4ECA;&#x306E;&#x4F4D;&#x7F6E;(x, y)&#x3068;&#x3001;&#x79FB;&#x52D5;&#x5148;&#x306E;(x, y)&#x5EA7;&#x6A19;&#x3092;&#x5143;&#x306B;&#x3001;
+theta &#x3064;&#x307E;&#x308A;&#x3069;&#x306E;&#x89D2;&#x5EA6;&#x306B;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x306E;&#x304B;&#x3092;&#x8A08;&#x7B97;&#x3057;&#x3066;&#x3042;&#x3052;&#x308C;&#x3070;&#x826F;&#x3055;&#x305D;&#x3046;&#x3067;&#x3059;&#x3002;</p>
+<p>&#x4ECA;&#x56DE;&#x306E;&#x30B2;&#x30FC;&#x30E0;&#x3067;&#x306F;&#x5B9F;&#x88C5;&#x3057;&#x307E;&#x305B;&#x3093;&#x304C;&#x3001;
+&#x79FB;&#x52D5;&#x5148;&#x306B;&#x5411;&#x304B;&#x3063;&#x3066;&#x3001;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x5B9F;&#x88C5;&#x3092;&#x3057;&#x3066;&#x307F;&#x307E;&#x3059;&#x3002;</p>
+<p><code>src/js/util.js</code></p>
+<pre><code>Util.radianToTheta = function(radian) {
+    return (radian * 180 / Math.PI) | 0;
+};
+</code></pre><p><code>src/js/object/base.js</code></p>
+<pre><code>ObjectBase.prototype.setAimTo = function(x, y) {
+    var ax = x - this.x;
+    var ay = y - this.y;
+
+    var theta = Util.radianToTheta(Math.atan2(ay, ax));
+    return theta;
+};
+</code></pre><p>JavaScript &#x306B;&#x306F; atan2 &#x95A2;&#x6570;&#x304C;&#x3042;&#x308B;&#x306E;&#x3067;&#x3001;&#x3053;&#x308C;&#x3092;&#x4F7F;&#x3046;&#x3053;&#x3068;&#x3067;&#x3001;2&#x3064;&#x306E;(x, y)&#x5EA7;&#x6A19;&#x304B;&#x3089;&#x3001;
+&#x3069;&#x306E;&#x65B9;&#x5411;&#x306B;&#x5411;&#x304B;&#x3046;&#x304B;&#x306E;&#x89D2;&#x5EA6;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;&#x3053;&#x3068;&#x304C;&#x3067;&#x304D;&#x307E;&#x3059;&#x3002;
+&#x305F;&#x3060;&#x3057;&#x3001;atan2 &#x304B;&#x3089;&#x8FD4;&#x3063;&#x3066;&#x304D;&#x305F;&#x89D2;&#x5EA6;&#x306F;&#x3001;&#x30E9;&#x30B8;&#x30A2;&#x30F3;&#x306A;&#x306E;&#x3067;&#x3001;&#x3B8;&#x306B;&#x5909;&#x63DB;&#x3059;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;&#x3002;</p>
+<p>&#x3053;&#x308C;&#x3067;&#x4F8B;&#x3048;&#x3070;&#x3001;&#x6575;&#x3092;&#x81EA;&#x6A5F;&#x306B;&#x5411;&#x304B;&#x3063;&#x3066;&#x79FB;&#x52D5;&#x3055;&#x305B;&#x305F;&#x3044;&#x5834;&#x5408;&#x306F;&#x3001;</p>
+<p><code>src/js/object/enemy.js</code></p>
+<pre><code>Enemy.prototype.update = function () {
+    /* ~&#x4EE5;&#x4E0A;&#x7701;&#x7565; ~ */
+
+    if (this.frame_count % 60 === 0) {
+        this.setAimTo(this.scene.chara.x, this.scene.chara.y);
+    }
+};
+</code></pre><p>&#x3068;&#x3059;&#x308B;&#x3053;&#x3068;&#x3067;&#x3001;&#x81EA;&#x6A5F;&#x306B;&#x5411;&#x304B;&#x3063;&#x3066;&#x79FB;&#x52D5;&#x3057;&#x3066;&#x304F;&#x308B;&#x6575;&#x306B;&#x3059;&#x308B;&#x3053;&#x3068;&#x304C;&#x3067;&#x304D;&#x307E;&#x3059;&#x3002;</p>
+<p>&#x6BCE;&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x3001;&#x81EA;&#x6A5F;&#x306E;&#x79FB;&#x52D5;&#x5148;&#x3092;&#x8A08;&#x7B97;&#x3059;&#x308B;&#x3068;&#x51E6;&#x7406;&#x306B;&#x6642;&#x9593;&#x304C;&#x304B;&#x304B;&#x308B;&#x306E;&#x3067;&#x3001;60&#x30D5;&#x30EC;&#x30FC;&#x30E0;&#x3054;&#x3068;&#x306B;
+&#x81EA;&#x6A5F;&#x306E;&#x4F4D;&#x7F6E;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x3066;&#x3001;&#x5411;&#x304B;&#x3046;&#x5148;&#x3092;&#x4FEE;&#x6B63;&#x3057;&#x3066;&#x3044;&#x307E;&#x3059;&#x3002;</p>
 
                                 
                                 </section>
@@ -978,7 +1013,7 @@ Chara.prototype.update = function () {
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"移動","level":"1.8","depth":1,"next":{"title":"キャラ移動","level":"1.8.1","depth":2,"anchor":"#キャラ移動","path":"move.md","ref":"move.md#キャラ移動","articles":[]},"previous":{"title":"敵","level":"1.7.2","depth":2,"anchor":"#敵","path":"create_object.md","ref":"create_object.md#敵","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"move.md","mtime":"2017-02-25T13:14:20.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-07T11:16:07.287Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"移動","level":"1.8","depth":1,"next":{"title":"キャラ移動","level":"1.8.1","depth":2,"anchor":"#キャラ移動","path":"move.md","ref":"move.md#キャラ移動","articles":[]},"previous":{"title":"敵","level":"1.7.2","depth":2,"anchor":"#敵","path":"create_object.md","ref":"create_object.md#敵","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"move.md","mtime":"2017-02-25T13:38:12.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-07T11:16:07.287Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
