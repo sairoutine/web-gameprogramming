@@ -34,7 +34,7 @@ BGMやSEを再生したいと思います。
 
 # Web Audio
 ```
-// context
+// context 作成
 var audio_context = new AudioContext();
 
 // mp3 ファイルの読み込み
@@ -47,16 +47,16 @@ request.onload = function () {
 	var res = request.response;
 	// arraybuffer を audio 再生用に decode
 	audio_context.decodeAudioData(res, function (buffer) {
-		// 音量調整用
+		// 音量調整用の GainNode 作成
 		var audio_gain = audio_context.createGain();
 
 		// 音量
 		audio_gain.gain.value = 1.0;
 
-		// source
+		// オーディオデータの出力を行う AudioBufferSourceNode 作成
 		var source = audio_context.createBufferSource();
 
-		// source に audio データを追加
+		// AudioBufferSourceNode に オーディオデータを追加
 		source.buffer = buffer;
 
 		// ループ再生する
@@ -68,30 +68,38 @@ request.onload = function () {
 		// ループの再生終了位置を指定
 		source.loopEnd = 10.55;
 
-		// source → audio_gain を接続
+		// AudioBufferSourceNode → GainNode を接続
 		source.connect(audio_gain);
 
-		// audio_gain → destination に接続
+		// GainNode → destination に接続
 		audio_gain.connect(audio_context.destination);
 
 		// 再生開始
 		source.start(0);
+
 		// 再生停止
 		source.stop(0);
 	});
 };
 ```
 
-sourceは、 再生するたびに生成して、使い捨てるというかたち になっている。
-
 ## 流れ
-こちらの方法を利用する場合の, アルゴリズムの概要を記載します.
+ゲームにおいて Web Audio API をこちらの方法を利用する場合の, アルゴリズムの概要を記載します.
 
 1. ArrayBuffer (バイナリデータ) を取得 (File API or Ajax)
 2. ArrayBuffer (バイナリデータ) を参照 (decodeAudioDataメソッド)
 3. 入力点を生成 (createBufferSourceメソッド)
 4. 入力点と出力点を接続 (connectメソッド)
 5. 音源のスイッチをON (startメソッド)
+
+
+
+
+
+
+
+
+sourceは、 再生するたびに生成して、使い捨てるというかたち になっている。
 
 
 ## コンテクスト
