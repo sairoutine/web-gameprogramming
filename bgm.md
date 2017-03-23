@@ -84,113 +84,162 @@ request.onload = function () {
 ```
 
 ## 流れ
-ゲームにおいて Web Audio API をこちらの方法を利用する場合の, アルゴリズムの概要を記載します.
+ゲームにおいて Web Audio を使用する際の基本的な流れです。
+オーディオデータの加工やミキシング等を行うには
+より複雑な流れが必要ですが、BGMの再生やSEの再生程度であれば、
+下記の流れで充分です。
 
-1. ArrayBuffer (バイナリデータ) を取得 (File API or Ajax)
-2. ArrayBuffer (バイナリデータ) を参照 (decodeAudioDataメソッド)
-3. 入力点を生成 (createBufferSourceメソッド)
-4. 入力点と出力点を接続 (connectメソッド)
-5. 音源のスイッチをON (startメソッド)
-
-
-
-
-
-
-
-
-sourceは、 再生するたびに生成して、使い捨てるというかたち になっている。
-
+0. コンテクスト(AudioContext) を生成
+1. オーディオデータ(ArrayBuffer) を取得(Ajax)
+2. オーディオデータからPCMオーディオデータを生成
+3. オーディオデータの入力点(AudioBufferSourceNode)を生成
+3. 音量調整ノード(GainNode)を生成
+4. オーディオデータと音量調整ノードを接続
+5. 音量調整ノードと出力を接続
+6. 音源のスイッチをON
 
 ## コンテクスト
-AudioContext(リアルタイムレンダリングの場合)とOfflineAudioContext(オフラインレンダリングの場合)が存在します。
-これらは、BaseAudioContext インターフェースを継承しています。
+Web Audioで何かする前に、まずコンテクストを作成する必要があります。
+コンテキストはオーディオ処理やデコードを行うノードの作成を制御します。
+(ノードについては後ほど説明します。)
 
-OfflineAudioContext はレンダリング/ミックスダウンで使用される特殊な AudioContext であり、(可能性としては)リアルタイムよりも高速に動作します。 それはオーディオハードウェアに出力しない代わりに可能な限り高速に動作して、 Promise にレンダリング結果を AudioBuffer として戻します。
+コンテクストには、AudioContext(リアルタイムレンダリング)とOfflineAudioContext(オフラインレンダリング)が存在しますが、
+ゲームにおいては、AudioContext を使います。
+
+AudioContext インスタンスからは以下のノードを作ることができます。
+
+- AudioBufferSourceNode
+ - GainNode
+ - ScriptProcessorNode
+ - AnalyserNode
+ - DelayNode
+ - BiquadFilterNode
+ - IIRFilterNode
+ - WaveShaperNode
+ - PannerNode
+ - SpatialPannerNode
+ - StereoPannerNode
+ - ConvolverNode
+ - ChannelSplitterNode
+ - ChannelMergerNode
+ - DynamicsCompressorNode
+ - OscillatorNode
+
+たくさんの種類がありますが、ゲームで主に使うのは、GainNode と AudioBufferSourceNode くらいです。
+この2つについては、ノードの項で説明します。
+
+## ノード
+
+ノードとは、音声データのフィルターのようなものです。入力と出力を持ちます。
+また、複数のノードを、入力と出力で接続して使います。
+ノードの種類には例えば、入力された音声データにディレイをかけて出力したり、
+入力された音声データの音量調整を行って出力したり、というのがあります。
+
+一つのノードに対して複数のノードの出力／入力を接続することもできます。
+接続されたノードの数はチャンネル数と呼ばれ、チャンネル数はノードの種類によって最大数がある場合もあります。
 
 
-AudioContext インスタンスからは以下の Node を作ることができます。
-ゲームで主に使うのは、gainNode と BufferNode くらいです。
-```
-AudioBufferSourceNode  createBufferSource ();
-    Promise<AudioWorker>   createAudioWorker (DOMString scriptURL);
-    ScriptProcessorNode    createScriptProcessor (optional unsigned long bufferSize = 0
-              , optional unsigned long numberOfInputChannels = 2
-              , optional unsigned long numberOfOutputChannels = 2
-              );
-    AnalyserNode           createAnalyser ();
-    GainNode               createGain ();
-    DelayNode              createDelay (optional double maxDelayTime = 1.0
-              );
-    BiquadFilterNode       createBiquadFilter ();
-    IIRFilterNode          createIIRFilter (sequence<double> feedforward, sequence<double> feedback);
-    WaveShaperNode         createWaveShaper ();
-    PannerNode             createPanner ();
-    SpatialPannerNode      createSpatialPanner ();
-    StereoPannerNode       createStereoPanner ();
-    ConvolverNode          createConvolver ();
-    ChannelSplitterNode    createChannelSplitter (optional unsigned long numberOfOutputs = 6
-              );
-    ChannelMergerNode      createChannelMerger (optional unsigned long numberOfInputs = 6
-              );
-    DynamicsCompressorNode createDynamicsCompressor ();
-    OscillatorNode         createOscillator ();
-```
-
-destination(AudioDestinationNode インスタンス) を持ち、単一の入力を持ち、全てのオーディオの最終的な出口を表しています。 
-
-resume, suspend, close といったメソッドを持ち、これにより音の出力を止めたりできますが、
-最終的な音の出口を止めるよりは、後述の source レベルで音の出力を止める方が有益です。
-
-
-decodeAudioData
-ArrayBuffer 内にあるオーディオファイルのデータを非同期にデコードします。
-
-コールバック関数の引数は1つでデコードされた PCM オーディオデータをあらわす AudioBuffer になります。
+ゲームで主に使うのは、GainNode と AudioBufferSourceNode、AudioDestinationNode です。
+ - AudioBufferSourceNode はオーディオデータのバイナリを出力します。
+ - GainNode は音量調整を行うノードです。
+ - AudioDestinationNode はオーディオの最終的な出口です。
 
 ## モジュラールーティング
 ![](./image/source_gain_destination.png)
 
-異なる AudioNode オブジェクト同士を接続できます。それぞれのノードは入力／出力を持っています。
+ノードの項目でも説明しましたが、ノードは入力と出力を持ち、
+あるノードの出力と、別のノードの入力を接続することができます。
+
+今回は、ゲームにおける Web Audio の使用なので、以下のような
+ノードの接続の仕方をすることにします。
+
+AudioBufferSourceNode -> GainNode -> AudioDestinationNode
+
+それでは 1つずつ解説します。
 
 ```
 var source = audio_context.createBufferSource();
 ```
 
-buffer_source は入力を持たず出力を持ちます。
+source は AudioBufferSourceNode インスタンスです。入力を持たず出力を持ちます。
+
+```
+source.buffer = buffer;
+```
+
+AudioContext.decodeAudioData により PCMデータに変換したオーディオデータを代入します。
+
+```
+source.loop = true;
+source.loopStart = 5.23;
+source.loopEnd = 10.55;
+source.connect(audio_gain);
+```
+
+AudioBufferSourceNode インスタンスには、ループの再生や、ループ再生の開始／終了位置を設定することができます。
+
+AudioBufferSourceNode インスタンスは使い捨てです。一度あるBGMやSEの再生に使用した後、
+別のBGMやSEの再生に使用することはできません。BGMやSEの再生のたびに AudioBufferSourceNode インスタンスを
+生成することになります。
+
+```
+var audio_gain = audio_context.createGain();
+audio_gain.gain.value = 1.0; // 音量を 1.0 に設定
+```
+
+audio_gain は GainNode インスタンスです。入力と出力を持ちます。
+入力されたデータの音量調整を行う加工を行い、それを出力します。
+
+GainNode は一つのインスタンスを使いまわして、複数のBGMやSEを再生しても構いませんが、
+音量調整やフェードイン／フェードアウト設定をいちいちリセットしなくてはならないため、
+再生のたびに新しくインスタンスを生成することをオススメします。
+
+
 
 ```
 audio_context.destination
 ```
 
-destination は出力を持たず入力を持ちます。
+destination はAudioDestinationNode インスタンスです。出力を持たず入力を持ちます。
+オーディオの最終的な出力先です。
 
 ```
-// 音量調整用
-var audio_gain = audio_context.createGain();
+// AudioBufferSourceNode → GainNode を接続
+source.connect(audio_gain);
+
+// GainNode → destination に接続
+audio_gain.connect(audio_context.destination);
 ```
 
-audio_gain は入力と出力を持ちます。
-主に、入力されたデータの音量調整を行う加工を行い、それを出力します。
+各ノードのインスタンスが持つ connect メソッドにより、各ノードの入力と出力を接続することができます。
 
-フィルターのような殆どの処理ノードは1つの入力と1つの出力を持ちます。
+```
+// 再生開始
+source.start(0);
 
-一つの Node に対して複数の Node を出力／入力することもできます。接続された Node 数はチャンネル数と呼ばれ、
-チャンネル数は Node によって最大数がある場合もあります。
+// 再生停止
+source.stop(0);
+```
+AudioBufferSourceNode インスタンスの start, stop メソッドにより、再生の開始／停止ができます。
+(AudioDestinationNode ではなく、AudioBufferSourceNode です。)
 
-もしdestinationが他のAudioContextによって作成されたAudioNodeの場合、InvalidAccessError 例外を発生します(must)。 
+引数の 0 は、今すぐ再生するという意味です。N秒後に再生したい場合、引数に開始時刻を渡します。
 
-disconnect(node) で切断することもできます。
 
-buffer_sourceは
-onended にイベントハンドラを設定することで、再生後をフックすることができます。
-stopメソッドを実行, または, 再生時間が経過したときに発生するイベントハンドラ
 
-start(when, offset) whenは context 上での再生開始時刻, offset はバッファ内の再生開始時刻です。
 
- AudioBufferSourceNodeインスタンスのstopメソッドを1度実行したあと, 再度startメソッドを実行しても再生されません. その理由は, AudioBufferSourceNodeは楽器音などのワンショットサンプルの再生に利用することを想定されているので, 使い捨てのノードという仕様になっているからです. したがって, オーディオを再開するには, 新たにAudioBufferSourceNodeインスタンスを生成する必要があります.
 
-gainNode は一つを使いまわしても構いませんが、音量調整やフェードイン／フェードアウト設定をいちいちリセットしなくてはならないため、再生のたびに新しくつくることをオススメします。
+
+
+
+
+
+
+
+
+
+
+
 
 ## ガーベジコレクション
 ガベージコレクション
@@ -210,10 +259,8 @@ AudioBufferSourceNodeにおいて, ガベージコレクションが実行され
 
 したがって, このセクションでは, 最初の3つの条件に関して解説します.
 
-source.start(context.currentTime + counter++);
 
-
-# タッチ時に再生を発火させとく
+## タッチ時に再生を発火させとく
 ```
 document.addEventListener('touchstart', this._onTouchStart.bind(this));
 WebAudio._onTouchStart = function() {
