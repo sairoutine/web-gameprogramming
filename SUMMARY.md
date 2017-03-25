@@ -30,9 +30,6 @@
 * [BGM/SE再生](bgm.md)
     * [SEを再生するときは一旦フラグ立てる](bgm.md#SEを再生するときは一旦フラグ立てる)
     * [フェードイン／フェードアウト](bgm.md#フェードイン／フェードアウト)
-* [シーン追加](add_scene.md)
-    * [ゲーム開始シーン](add_scene.md#ゲーム開始シーン)
-    * [ゲームオーバーシーン](add_scene.md#ゲームオーバーシーン)
 * [その他](others.md)
     * [フェードイン／フェードアウト](others.md#フェードイン／フェードアウト)
     * [FPS計算](others.md#FPS計算)
@@ -46,6 +43,5 @@
     * [JavaScript](reference.md#JavaScript)
     * [逆引きゲームプログラミング](reference.md#逆引きゲームプログラミング)
     * [シューティングゲームアルゴリズムマニアックス](reference.md#シューティングゲームアルゴリズムマニアックス)
-* [後書き](postscript.md)
 * [Special Thanks](thanks.md)
 
