@@ -407,6 +407,7 @@ playSE 及び playBGM メソッドを呼び出すことで、オーディオを�
 音が大きくなるあるいは、再生タイミングによってはそれぞれのSEがそれぞれズレてしまうため、
 このように再生するときは一旦フラグだけ立てて、後述する executePlay メソッドで実際の再生を行います。
 
+```
 // SE, BGM の再生の実行
 AudioLoader.prototype.executePlay = function() {
 	/* ~ 省略 ~ */
@@ -424,6 +425,7 @@ AudioLoader.prototype.executePlay = function() {
 
 	/* ~ 省略 ~ */
 };
+```
 
 executePlay 関数で、実際にフラグの立っている SE や BGM の再生を行います。
 BGMの再生のときのみ、AudioBufferSourceNode インスタンスを変数に保存しています。
@@ -439,24 +441,49 @@ Game.prototype.run = function () {
 
 ## フェードイン／フェードアウト
 
+GainNode インスタンスの gain プロパティに存在する linearRampToValueAtTime メソッドを使用すると、
+BGM のフェードイン／フェードアウトを簡単に実装することができます。
 
-gainNode.gain.linearRampToValueAtTime
+```
+AudioLoader.prototype.fadeInBGM = function(duration) {
+	var self = this;
+	if(self.playing_bgm_gain) {
+		var gain = self.playing_bgm_gain.gain;
+		var startTime = self.context.currentTime;
+		gain.setValueAtTime(gain.value, startTime);
+		var endTime = startTime + duration;
+		gain.linearRampToValueAtTime(1, endTime);
+	}
+},
 
-WebAudio._fadeIn = function(duration) {
-    if (this._masterGainNode) {
-        var gain = this._masterGainNode.gain;
-        var currentTime = WebAudio._context.currentTime;
-        gain.setValueAtTime(gain.value, currentTime);
-        gain.linearRampToValueAtTime(1, currentTime + duration);
-    }
+AudioLoader.prototype.fadeOutBGM = function(duration) {
+	var self = this;
+	if(self.playing_bgm_gain) {
+		var gain = self.playing_bgm_gain.gain;
+		var startTime = self.context.currentTime;
+		gain.setValueAtTime(gain.value, startTime);
+		var endTime = startTime + duration;
+		gain.linearRampToValueAtTime(0, endTime);
+	}
 };
+```
 
-WebAudio._fadeOut = function(duration) {
-    if (this._masterGainNode) {
-        var gain = this._masterGainNode.gain;
-        var currentTime = WebAudio._context.currentTime;
-        gain.setValueAtTime(gain.value, currentTime);
-        gain.linearRampToValueAtTime(0, currentTime + duration);
-    }
-};
+fadeInBGM あるいは fadeOutBGM を実行することにより、
+現在再生中のBGMをフェードイン／フェードアウトさせることができます。
 
+```
+gain.setValueAtTime(gain.value, startTime);
+```
+
+現在時刻における音量を、現在の音量に設定しています。
+設定しなくてもデフォルトの値(=現在の音量)になるのですが、
+古いブラウザでは、デフォルトの値が 0 になっているブラウザもあるため、念のため設定します。
+
+```
+gain.linearRampToValueAtTime(1, endTime); // fade in
+gain.linearRampToValueAtTime(0, endTime); // fade out
+```
+
+第一引数は最終的な音量です。第二引数に、いつまでにその最終的な音量まで減らす／増やすのかを設定します。
+フェードインであれば、最終的な値は 1 になるので、第一引数に 1 を、フェードアウトならば、最終的な値は 0 になるので、
+第一引数に 0 を指定しています。
