@@ -225,94 +225,218 @@ AudioBufferSourceNode インスタンスの start, stop メソッドにより、
 
 引数の 0 は、今すぐ再生するという意味です。N秒後に再生したい場合、引数に開始時刻を渡します。
 
+## i0S端末での再生
+iOS ではユーザーのアクション契機でないとオーディオを再生できません。
+一度ユーザーのアクション契機で再生すれば、以降はユーザーのアクション契機でなくとも
+オーディオを再生することができます。
 
+よって、iOS向けの端末でのゲームでは、ユーザーの最初のタッチ時に
+無音のオーディオを再生しておくと便利です。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## ガーベジコレクション
-ガベージコレクション
-
-AudioBufferSourceNodeは, 使い捨てのノードという仕様であることを解説しました. つまり, インスタンスの生成と破棄を繰り返すことが想定されています. したがって, AudioBufferSourceNodeインスタンスに割り当てられたメモリの解放が実行される条件については理解しておく必要があります.
-
-AudioBufferSourceNodeインスタンスに限らず, Web Audio APIが定義するクラスのインスタンスにおいては, 以下の5つの条件すべてにあてはまる場合, ガベージコレクションの対象になります.
-
-参照が残っていない
-オーディオが停止している
-サウンドスケジューリングが設定されていない
-ノードが接続されていない
-処理すべきデータが残っていない
-つまり, 何らかの形で利用されているノードはガベージコレクションの対象とならないということです.
-
-AudioBufferSourceNodeにおいて, ガベージコレクションが実行される条件で重要なのは, 最初の3つです. その理由は, AudioBufferSourceNodeは他のノードの出力先 (接続先) として利用されることがないこと, また, 最後の条件はConvolverNodeなどにおいて考慮すべきことであり, AudioBufferSourceNodeでは無関係だからです.
-
-したがって, このセクションでは, 最初の3つの条件に関して解説します.
-
-
-## タッチ時に再生を発火させとく
 ```
-document.addEventListener('touchstart', this._onTouchStart.bind(this));
-WebAudio._onTouchStart = function() {
-    var context = WebAudio._context;
-    if (context && !this._unlocked) {
-        // Unlock Web Audio on iOS
-        var node = context.createBufferSource();
-        node.start(0);
-        this._unlocked = true;
-    }
+var unlocked = false;
+
+document.addEventListener('touchstart', function() {
+	if (unlocked) {
+		var node = audio_context.createBufferSource();
+		node.start(0);
+		unlocked = true;
+	}
 };
+```
+
+
 
 ## 音声の読み込み
-`src/asset_loader/image.js`
+`src/asset_loader/audio.js`
 ```
-var ImageLoader = function(game) {
-	this.images = {};
+var AudioLoader = function(game) {
+	this.context = new AudioContext();
+	this.audios = {}; // オーディオデータ
 
-	this.loading_image_num = 0;
-	this.loaded_image_num = 0;
+	this.loading_audio_num = 0;
+	this.loaded_audio_num  = 0;
+
+	this.playing_bgm_source = null; // 現在再生中のBGMの AudioBufferSourceNode インスタンス
+	this.playing_bgm_gain   = null; // 現在再生中のBGMの GainNode インスタンス
+	this.next_play_bgm      = null; // 次のフレームで再生予定のBGM
+	this.next_play_se       = {};   // 次のフレームで再生予定のSE
 };
-ImageLoader.prototype.loadImage = function(name, path) {
+AudioLoader.prototype.loadAudio = function(name, path, volume, is_loop, loop_start, loop_end) {
 	var self = this;
 
-	self.loading_image_num++;
+	volume = volume || 1.0;
 
-	// it's done to load image
-	var onload_function = function() {
-		self.loaded_image_num++;
+	self.loading_audio_num++;
+
+	var request = new XMLHttpRequest();
+	request.open('GET', path, true);
+	request.responseType = 'arraybuffer';
+
+	request.send();
+	request.onload = function () {
+		var res = request.response;
+		// arraybuffer を audio 再生用に decode
+		audio_context.decodeAudioData(res, function (buffer) {
+			self.audios[name] = {
+				buffer:     buffer,
+				volume:     volume,
+				is_loop:    is_loop,
+				loop_start: loop_start,
+				loop_end:   loop_end,
+			};
+
+			self.loaded_audio_num++;
+		});
 	};
-
-	var image = new Image();
-	image.src = path;
-	image.onload = onload_function;
-	this.images[name] = image;
-};
-
-ImageLoader.prototype.isAllLoaded = function() {
-	return this.loaded_image_num > 0 && this.loaded_image_num === this.loading_image_num;
-};
-
-ImageLoader.prototype.get = function(name) {
-	return this.images[name];
-};
-ImageLoader.prototype.remove = function(name) {
-	delete this.images[name];
 };
 
 
-module.exports = ImageLoader;
+AudioLoader.prototype.isAllLoaded = function() {
+	return this.loaded_audio_num > 0 && this.loaded_audio_num === this.loading_audio_num;
+};
+
+// SE の再生
+AudioLoader.prototype.playSE = function(name) {
+	this.next_play_se[name] = true;
+};
+// BGM の再生
+AudioLoader.prototype.playBGM = function(name) {
+	this.next_play_bgm = name;
+
+};
+
+// SE, BGM の再生の実行
+AudioLoader.prototype.executePlay = function() {
+
+	// SE の再生
+	for (var name in this.next_play_se) {
+		var source = this._setupBufferSource(name);
+		var audio_gain = this._setupAudioGain(name);
+
+		source.connect(audio_gain);
+		audio_gain.connect(this.context.destination);
+
+		// 再生開始
+		source.start(0);
+	});
+
+	// BGM の再生
+	if (this.next_play_bgm) {
+		this.playing_bgm_source = this._setupBufferSource(this.next_play_bgm);
+		this.playing_bgm_gain   = this._setupAudioGain(this.next_play_bgm);
+
+		this.playing_bgm_source.connect(this.playing_bgm_gain);
+		this.playing_bgm_gain.connect(this.context.destination);
+
+		// 再生開始
+		this.playing_bgm_source.start(0);
+	});
+
+	// reset
+	this.next_play_se = {};
+	this.next_play_bgm = null;
+};
+
+// BGM の再生停止
+AudioLoader.prototype.stopBGM = function() {
+	if(this.playing_bgm_source) {
+		this.playing_bgm_source.stop(0);
+
+		// reset
+		this.playing_bgm_source = null;
+		this.playing_bgm_gain   = null;
+	}
+};
+
+AudioLoader.prototype._setupBufferSource = function(name) {
+	var data = this.audios[name];
+
+	var source = this.context.createBufferSource();
+	source.buffer = data.buffer;
+
+	if(data.is_loop) {
+		source.loop = true;
+	}
+
+	if(data.loop_start) {
+		source.loopStart = loop_start;
+	}
+
+	if(data.loop_end) {
+		source.loopEnd = loop_end;
+	}
+
+	return source;
+};
+AudioLoader.prototype._setupAudioGain = function(name) {
+	var data = this.audios[name];
+
+	var audio_gain = this.context.createGain();
+	audio_gain.gain.value = data.volume;
+
+	return audio_gain;
+};
+
+AudioLoader.prototype.remove = function(name) {
+	delete this.audios[name];
+};
+
+module.exports = AudioLoader;
 ```
-## SEを再生するときは一旦フラグ立てる
+
+```
+// SE の再生
+AudioLoader.prototype.playSE = function(name) {
+	this.next_play_se[name] = true;
+};
+// BGM の再生
+AudioLoader.prototype.playBGM = function(name) {
+	this.next_play_bgm = name;
+
+};
+```
+
+playSE 及び playBGM メソッドを呼び出すことで、オーディオを再生します。
+ただし、メソッドの中身を見てもらえばわかるように、playSE 及び playBGM 内では
+再生予定のオーディオのフラグを立てているだけです。
+
+これは、1フレーム内に同じオーディオが複数再生される場合に、
+1度しか再生しないようにするためです。例えば、シューティングゲームであれば、
+複数の敵が同時に死ぬ場合がありますが、この際に死んだ敵の回数だけ敵が死ぬ音が再生されると
+音が大きくなるあるいは、再生タイミングによってはそれぞれのSEがそれぞれズレてしまうため、
+このように再生するときは一旦フラグだけ立てて、後述する executePlay メソッドで実際の再生を行います。
+
+// SE, BGM の再生の実行
+AudioLoader.prototype.executePlay = function() {
+	/* ~ 省略 ~ */
+	// BGM の再生
+	if (this.next_play_bgm) {
+		this.playing_bgm_source = this._setupBufferSource(this.next_play_bgm);
+		this.playing_bgm_gain   = this._setupAudioGain(this.next_play_bgm);
+
+		this.playing_bgm_source.connect(this.playing_bgm_gain);
+		this.playing_bgm_gain.connect(this.context.destination);
+
+		// 再生開始
+		this.playing_bgm_source.start(0);
+	});
+
+	/* ~ 省略 ~ */
+};
+
+executePlay 関数で、実際にフラグの立っている SE や BGM の再生を行います。
+BGMの再生のときのみ、AudioBufferSourceNode インスタンスを変数に保存しています。
+これは、stopBGM メソッドによって、BGMの再生を後ほど停止できるようにするためです。
+
+executePlay メソッドは run 関数内で一度だけ呼び出してください。
+```
+Game.prototype.run = function () {
+	/* ~ 省略 ~ */
+	this.audio_loader.executePlay();
+};
+```
+
 ## フェードイン／フェードアウト
 
 
