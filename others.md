@@ -204,32 +204,26 @@ package.json を少し更新します。以下の行を `package.json` に追加
 
 ビルド前に、開発用として Electron で実行できるように、`npm start`コマンドを定義しています。
 
-また 64bit の Windows と Mac 向けに `build:win` と `build:mac` コマンドを定義しています。
+また 64bit の Windows と Mac 向けに `npm run-script build:win` と `npm run-script build:mac` コマンドを定義しています。
 これらは、electron-packager によりビルドされます。
 
 ```
 electron-packager <sourcedir> <appname> --platform=<platform> --arch=<arch> [optional flags...]
 ```
 
+`electron-packager` コマンドの使い方は上記のようになります。`sourcedir` がビルド対象の html や js があるディレクトリです。
+minify 前の js は必要ないので、 今回は public ディレクトリを指定しました。
 
+`appname` はアプリケーションの名前です。 `platform` は Windows や Mac あるいは Linux などどのOS向けにビルドするのかを指定します。`arch` は 32bit もしくは 64bit 向けに出力するのかを指定します。`icon` には、アプリケーションのアイコンを指定します。Windows と Mac では、使用できるアイコンのフォーマットが異なるので、2種類用意することに注意してください。
 
-```
-# Install dependencies
-npm install
-# Run the app
-npm start
-# build the app for mac
-npm run-script build:mac
-# build the app for win
-npm run-script build:win
+## TIPS
+Mac 向けのアプリケーションをビルドする際、リサイズしない設定にしていても、
+ズームを行うことが可能になったりします。ズームを禁止させるには、クライアント側のコード(`main.js` など)に下記のコードを追加します。
 
 ```
-
-
+if (typeof window !== 'undefined' && window.process && window.process.type === 'renderer') {
+	require('electron').webFrame.setZoomLevelLimits(1,1); //zoomさせない
+}
 ```
-    if (typeof window !== 'undefined' && window.process && window.process.type === 'renderer') {
-		require('electron').webFrame.setZoomLevelLimits(1,1); //zoomさせない
-        return true;
-    }
-```
+
 
