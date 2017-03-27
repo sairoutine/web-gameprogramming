@@ -126,3 +126,110 @@ Canvas の DOM の requrestFullscreen メソッドを呼び出すことで、
 
 # Electron
 
+Electron は JavaScript でデスクトップアプリケーションが作成できるツールです。
+本書では、JavaScript と HTML5 を利用して、Webブラウザ上で動くゲームを作成しましたが、
+Electron を使用することで、Web ブラウザ上で動くゲームをPC向けアプリケーションとして出力することができます。
+
+npm で electron と electron-packager をインストールします。
+`electron` は、PCでの実行環境のことで、`electron-packager` は、
+実際に Web アプリケーションを、PC向けアプリとしてビルドする際に使用するツールです。
+
+```
+npm install --save-dev electron electron-packager
+```
+
+Electron 上で Webブラウザゲームを動かすスクリプトを作ります。
+
+`public/electron.js`
+```
+'use strict';
+var electron = require('electron');
+var app = electron.app;
+var dialog = electron.dialog;
+var BrowserWindow = electron.BrowserWindow;
+
+var mainWindow;
+
+function createWindow () {
+	mainWindow = new BrowserWindow({
+		"width":          640,
+		"height":         480,
+		"useContentSize": true,  // フレームのサイズをサイズに含まない
+		"resizable":      false, // ウィンドウのリサイズを禁止
+		"alwaysOnTop":    true,  // 常に最前面
+	});
+
+	mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+	mainWindow.on('closed', function () {
+		mainWindow = null;
+	});
+}
+
+app.on('ready', createWindow);
+
+app.on('window-all-closed', function () {
+	if (process.platform !== 'darwin') {
+		app.quit();
+	}
+});
+
+app.on('activate', function () {
+	if (mainWindow === null) {
+		createWindow();
+	}
+});
+```
+
+640 × 480 のウィンドウを作成し、そこに index.html を表示しています。
+Electron にはメインプロセスとレンダラプロセスの概念がありますが、
+このように Webブラウザ上で既に動くゲームをPC向けアプリケーションとして起動する場合は、
+レンダラプロセス上で index.html を実行するだけで、PC向けゲームを作成できます。
+
+
+package.json を少し更新します。以下の行を `package.json` に追加します。
+
+`./package.json`
+```
+"main": "electron.js",
+"scripts": {
+	"start": "electron ./public/electron.js",
+	"build:win": "electron-packager ./public AppName --platform=win32  --arch=x64 --icon=icon.ico",
+	"build:mac": "electron-packager ./public AppName --platform=darwin --arch=x64 --icon=icon.icns",
+},
+```
+
+`main` に指定したファイルが、Electron で作成したPC向けアプリケーションが
+起動する際に実行される JavaScript ファイルです。
+
+ビルド前に、開発用として Electron で実行できるように、`npm start`コマンドを定義しています。
+
+また 64bit の Windows と Mac 向けに `build:win` と `build:mac` コマンドを定義しています。
+これらは、electron-packager によりビルドされます。
+
+```
+electron-packager <sourcedir> <appname> --platform=<platform> --arch=<arch> [optional flags...]
+```
+
+
+
+```
+# Install dependencies
+npm install
+# Run the app
+npm start
+# build the app for mac
+npm run-script build:mac
+# build the app for win
+npm run-script build:win
+
+```
+
+
+```
+    if (typeof window !== 'undefined' && window.process && window.process.type === 'renderer') {
+		require('electron').webFrame.setZoomLevelLimits(1,1); //zoomさせない
+        return true;
+    }
+```
+
