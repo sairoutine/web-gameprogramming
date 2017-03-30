@@ -4,11 +4,13 @@
 
 シーンは、Webサイトでいうところのページです。画面1つを表します。例えば、タイトルシーン、ステージシーン、エンディングシーンなどがあります。シーンは遷移します。タイトルシーンの次は、ステージ選択シーンに変わるでしょうし、ステージシーンでゲームオーバーになれば、ゲームオーバーシーンに変わります。
 
-オブジェクトは Web サイトでいうところの DOM です。例えば、敵オブジェクト、自機オブジェクト、弾オブジェクト、文字オブジェクトなどがあります。シーン上に存在する全ての要素を、オブジェクトとして扱います。オブジェクトには親子関係があります。シューティングゲームで言えば、自機とオプションは、親子関係になるでしょう。
+オブジェクトは Web サイトでいうところの DOM です。例えばシューティングゲームであれば、敵オブジェクト、自機オブジェクト、弾オブジェクト、文字オブジェクトなどがあります。シーンとオブジェクトの仕組みを採用したゲームエンジンでは、シーン上に存在する全ての要素を、オブジェクトとして扱うことになります。そしてオブジェクトには親子関係があります。シューティングゲームで言えば、自機と自機オプションは、親子関係になるでしょう。
 
-シーンとオブジェクトは、シューティングゲームでもアクションゲームでも通用する概念です。2Dでも3Dでも通用する概念です。
+シーンとオブジェクトは、シューティングゲームでもアクションゲームでも通用する概念です。また2Dでも3Dでも通用するゲームの設計において普遍的な概念です。
+
 ## シーン
 それでは、実際にシーンを作ってみましょう。まずはステージシーンを作ろうと思います。
+
 `src/scene/stage.js`
 ```
 var StageScene = function (game) {
@@ -28,24 +30,25 @@ StageScene.prototype.draw = function () {
 module.exports = StageScene;
 ```
 
-StageScene クラスを作りました。StageScene クラスはインスタンスメソッドとして、
-update と draw メソッドを持っています。
+`StageScene` クラスを作りました。`StageScene` クラスはインスタンスメソッドとして、
+`update` と `draw` メソッドを持っています。
 
-update と draw メソッドは、1秒間に 60回呼び出すこととします。
-update メソッドはゲームの状態の更新を担当し、draw はその後に状態を元に描画することを担当することにします。
+`update` と `draw` メソッドは、1秒間に 60 回呼び出すこととします。
+`update` メソッドはゲームの状態の更新を担当し、`draw` はその後に状態を元に描画することを担当することにします。
 
-update 関数の中では、経過フレーム数を数えています。ゲームの種類にもよりますが、
-シューティングゲームなどでは、敵の登場タイミングを計る際などに使用するので、
+`update` 関数の中では、経過フレーム数を数えています。ゲームの種類にもよりますが、
+シューティングゲームなどでは、敵の登場タイミングを計る際などに経過フレーム数を使用するので、
 経過フレーム数を数えておくと、他の実装でも使うことができます。
 
-コンストラクタの引数に `game` 引数を取っています。`game` は Game クラスのインスタンスを渡すことにします。
-
+コンストラクタの引数に `game` 引数を取っています。`game` は `Game` クラスのインスタンスを渡すことにします。
 
 ## シーン切り替え
-シーンを Game クラス側から呼び出したいと思います。
+シーンを `Game` クラス側から呼び出したいと思います。
+
 `src/game.js`
 ```
 var StageScene = require("scene/stage");
+
 var Game = function (canvas) {
 	this.ctx = canvas.getContext('2d'); // Canvas への描画は、ctx プロパティを通して行うこととする。
 	// 画面サイズ
@@ -63,6 +66,9 @@ var Game = function (canvas) {
 Game.prototype.run = function () {
 	this.toNextSceneIfExists(); // 次のシーンが前フレームにて予約されていればそちらに切り替え
 
+	this.scenes[this.current_scene].update();
+	this.scenes[this.current_scene].draw();
+
 	this.request_id = requestAnimationFrame(this.run.bind(this));
 };
 Game.prototype.toNextSceneIfExists = function () {
@@ -71,12 +77,16 @@ Game.prototype.toNextSceneIfExists = function () {
 	this.current_scene = this.next_scene;
 	this.next_scene = null;
 };
+
+// ゲームで使用するシーンを追加
 Game.prototype.addScene = function (name, scene) {
 	this.scenes[name] = scene;
 };
+// シーン切り替え
 Game.prototype.changeScene = function (name) {
 	this.next_scene = name;
 };
+// 前のシーンに戻る
 Game.prototype.changePrevScene = function () {
 	if(!this.prev_scene) return;
 
@@ -85,7 +95,7 @@ Game.prototype.changePrevScene = function () {
 };
 ```
 
-Game クラスのコンストラクタ及び `run` 関数を修正しております。また、`addScene`, `changeScene`, `toNextSceneIfExists`, `changePrevScene` メソッドを追加しております。一つずつ解説したいと思います。
+`Game` クラスのコンストラクタ及び `run` 関数を修正しております。また、`addScene`, `changeScene`, `toNextSceneIfExists`, `changePrevScene` メソッドを追加しております。一つずつ解説したいと思います。
 
 ```
 var Game = function (canvas) {
@@ -103,7 +113,7 @@ var Game = function (canvas) {
 	this.changeScene("stage"); // 最初のシーンに切り替え
 };
 ```
-Game クラスのコンストラクタを変更してます。大きな変更は2点です。
+Game クラスのコンストラクタです。大きな変更は2点です。
 
 まずシーン管理用に `scenes`, `next_scene`, `current_scene`, `prev_scene` といったプロパティの追加をしています。
 
@@ -112,17 +122,24 @@ Game クラスのコンストラクタを変更してます。大きな変更は
 ゲームを初期化する際に、全てのシーンを追加することとなるかと思います。
 
 `next_scene`, `current_scene`, `prev_scene` はそれぞれ、「次に遷移するシーン」「現在のシーン」「前のシーン」です。
-後述しますが、シーンを切り替える際は、切り替えを実行して、すぐに切り替えるのではなく、次のフレームの最初にシーン切り替えを行います。そのため、切り替え先のシーンを保存する `next_scene` が必要になります。また、前のシーンに戻りたい、例えばステージシーンで、メニューを開いて、メニューを閉じたらまた元のステージに戻る場合などのために、前のシーンを保存する `prev_scene` を使用します。
+後述しますが、シーンを切り替える際は、切り替えを実行して、すぐに切り替えるのではなく、次のフレームの最初にシーン切り替えを行います。そのため、切り替え先のシーンを一旦保存するための `next_scene` が必要になります。また前のシーンに戻りたい場合がゲームではあります。例えばステージシーンで、メニューを開いて、メニューを閉じたらまた元のステージに戻る場合などです。そういった用途のために、前のシーンを保存する `prev_scene` を使用します。
 
 ```
 Game.prototype.run = function () {
 	this.toNextSceneIfExists(); // 次のシーンが前フレームにて予約されていればそちらに切り替え
 
+	this.scenes[this.current_scene].update();
+	this.scenes[this.current_scene].draw();
+
 	this.request_id = requestAnimationFrame(this.run.bind(this));
 };
 ```
 
+`run` メソッドは、requestAnimationFrame 関数により、ブラウザの描画タイミング毎(1秒に60回)呼ばれます。
 `run` メソッド内にて、`toNextSceneIfExists` メソッドを呼び出しています。先述しましたが、`toNextSceneIfExists` 関数は、`next_scene` プロパティに、切り替え先のシーンが予約されていれば、そのシーンに切り替えを行います。
+
+また、現在のシーンの `update` と `draw` メソッドを呼び出しています。`run` メソッドが1秒に60回呼ばれるので、
+シーンの `update` と `draw` も1秒に60回呼ばれるわけです。
 
 ```
 Game.prototype.toNextSceneIfExists = function () {
@@ -133,14 +150,13 @@ Game.prototype.toNextSceneIfExists = function () {
 };
 ```
 
-`addScene`, `changeScene` メソッドについては以下の通りです。
+`addScene`, `changeScene` メソッドについては以下の通りです。`name` にはシーン名を、`scene` にはシーンのインスタンスを渡します。
 
 ```
 Game.prototype.addScene = function (name, scene) {
 	this.scenes[name] = scene;
 };
 ```
-
 
 ```
 Game.prototype.changeScene = function (name) {
@@ -159,11 +175,12 @@ Game.prototype.changePrevScene = function () {
 };
 ```
 
-なお、これらのシーン管理は、いわゆる Game クラスにさせるのではなく、`SceneManager` のような専用のクラスを
-用意して、そこに `addScene`, `changeScene` といったメソッドをまとめる場合も多いです。
+なお今回は省略しましたが、これらのシーン管理は、Game クラスに実装せず、
+`SceneManager` のような専用のクラスを用意して、そこに `addScene`, `changeScene` といったメソッドをまとめる場合も多いです。
 
 ## オブジェクト
 オブジェクトを作っていきましょう。自機オブジェクトを作成します。
+
 `src/object/chara.js`
 ```
 var Chara = function (scene) {
@@ -193,12 +210,12 @@ module.exports = Chara;
 ```
 
 Chara クラスを作りました。Chara クラスはインスタンスメソッドとして、
-update と draw メソッドを持っています。また、パブリックなアクセサとして、idを持っています。
+`update` と `draw` メソッドを持っています。また、パブリックなアクセサとして、`id` を持っています。
 
-Scene クラスと同じように、update と draw メソッドは、1秒間に 60回呼び出すこととします。
-update メソッドはゲームの状態の更新を担当し、draw はその後に状態を元に描画することを担当することにします。
+`Scene` クラスと同じように、`update` と `draw` メソッドは、1秒間に 60回呼び出すこととします。
+`update` メソッドはゲームの状態の更新を担当し、`draw` はその後に状態を元に描画することを担当することにします。
 
-id はゲーム内でオブジェクトを一意に識別するIDです。例えば、敵の弾などは画面上に複数存在するので、
+`id` はゲーム内でオブジェクトを一意に識別するIDです。例えば、敵の弾などは画面上に同じ種類の弾が複数存在するので、
 それらを個別に識別するIDがあると便利です。今回、キャラは画面上に1機だけなので、
 `"chara"` 固定にしたいと思います。
 
@@ -206,6 +223,7 @@ id はゲーム内でオブジェクトを一意に識別するIDです。例え
 
 # シーンにオブジェクトの追加
 ステージシーンに、先ほど追加したキャラクラスのインスタンスを追加したいと思います。
+
 `src/scene/stage.js`
 ```
 var Chara = require("../object/chara");
@@ -249,27 +267,17 @@ StageScene.prototype.drawObjects = function () {
 module.exports = StageScene;
 ```
 
+修正点をピックアップして解説していきます。
+
 ```
-var StageScene = function (game) {
-	this.game = game;
-
-	// シーン上のオブジェクト一覧
-	this.objects = {};
-
-	// 経過フレーム数
-	this.frame_count = 0;
-
-	this.addObject(new Chara(this));
-};
 StageScene.prototype.addObject = function (object) {
 	this.objects[object.id()] = object;
 };
 ```
 
 `addObject` メソッドを追加して、ステージシーンにキャラインスタンスを追加しています。
-追加されたキャラインスタンスは、今後追加されるであろう
-他のオブジェクトと一緒に、`objects` プロパティ内で管理されます。
-この辺りは、Game クラスに、シーン管理を追加したときと同じですね。
+追加されたキャラインスタンスは、他のオブジェクトと一緒に、`objects` プロパティ内で管理されます。
+この辺りは、`Game` クラスに、シーン管理を追加したときと同じですね。
 
 ```
 // 更新
@@ -285,7 +293,7 @@ StageScene.prototype.updateObjects = function () {
 };
 ```
 
-シーンの update を実行すると、シーンが管理している各オブジェクトの update も実行されるようにします。
+シーンの `update` を実行すると、シーンが管理している各オブジェクトの `update` も実行されるようにします。
 
 ```
 // 描画
@@ -300,4 +308,4 @@ StageScene.prototype.drawObjects = function () {
 };
 ```
 
-同様に、シーンの draw を実行すると、シーンが管理する各オブジェクトの draw も実行されるようにします。
+同様に、シーンの `draw` を実行すると、シーンが管理する各オブジェクトの `draw` も実行されるようにします。
