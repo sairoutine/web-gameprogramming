@@ -1,10 +1,11 @@
 # 描画
-ここまでで、シーン及びシーン内にオブジェクトを追加しました。シーンやオブジェクトを追加したにも関わらず、画面には何も表示されずに寂しかったことと思います。いよいよ画面の描画について書いていきます。
+ここまでで、シーンとオブジェクトをゲームに追加しました。シーンやオブジェクトを追加しましたが、まだ描画を行っていないため、画面には何も表示されていません。いよいよこれらのシーンやオブジェクトを描画していきたいと思います。
+
 ## 画像の読み込み
-まずは、画像をゲームに読み込む処理をしたいと思います。JavaScript は非同期なので、
+まずは、画像をゲームに読み込む処理をしたいと思います。JavaScript は非同期に処理される言語なので、
 画像を読み込みしている最中も処理が進行します。画像の読み込みをしている間は、
 ゲームを進行させない(=ローディング画面を表示する)ようにしないと、画像が表示されないまま
-ゲームが進行してしまいます。
+ゲームが進行してしまいます。`ImageLoader` クラスを作成し、画像の読み込み処理や、どこまで画像を読み込んだかを管理することにします。
 
 `src/asset_loader/image.js`
 ```
@@ -30,20 +31,25 @@ ImageLoader.prototype.loadImage = function(name, path) {
 	this.images[name] = image;
 };
 
+// 画像が全て読み込まれたかどうか
 ImageLoader.prototype.isAllLoaded = function() {
 	return this.loaded_image_num > 0 && this.loaded_image_num === this.loading_image_num;
 };
 
+// 画像データの取得
 ImageLoader.prototype.get = function(name) {
 	return this.images[name];
 };
+
+// 画像データをメモリから解放
 ImageLoader.prototype.remove = function(name) {
 	delete this.images[name];
 };
 
-
 module.exports = ImageLoader;
 ```
+
+それでは `ImageLoader` クラスを、一つずつ解説していきたいと思います。
 
 ```
 var ImageLoader = function(game) {
@@ -54,7 +60,7 @@ var ImageLoader = function(game) {
 };
 ```
 
-ImageLoader クラスのコンストラクタです。読み込んだ画像データを保持する `images` プロパティ、
+`ImageLoader` クラスのコンストラクタです。読み込んだ画像データの一覧を保持する `images` プロパティ、
 読み込み中の画像の数である `loading_image_num`, 読み込んだ画像数である `loaded_image_num` を持ちます。
 
 ```
@@ -75,7 +81,8 @@ ImageLoader.prototype.loadImage = function(name, path) {
 };
 ```
 
-画像の読み込みを開始します。
+`loadImage` メソッドを使用すると、画像の読み込みを開始します。`name` はプログラム内での画像の識別子(名前)です。
+`path` に画像のパスを指定します。非同期に読み込みを行うので、画像の読み込みを待たずに、関数は返ります。
 
 ```
 ImageLoader.prototype.isAllLoaded = function() {
@@ -83,9 +90,13 @@ ImageLoader.prototype.isAllLoaded = function() {
 };
 ```
 
-画像の読み込みが完了したことをチェックするメソッドです。プログラム側で、画像データが必要になった場合、
-まず `loadImage` メソッドにより、画像の読み込みを開始し、シーン側で、`isAllLoaded` 関数が true になるまで、
-他のゲームの進行をストップする(=ローディング画面を表示する)必要があります。
+`isAllLoaded` メソッドは画像の読み込みが全て完了したことをチェックするメソッドです。
+
+`ImageLoader` クラスを使って、画像を読み込みする際は、読み込みたい画像の数だけ `loadImage` メソッドを呼び出し、
+`Game` クラスの `run` メソッドなどで、定期的に、`isAllLoaded` メソッドが `true` であることを確認する必要があります。
+
+もし、`isAllLoaded` メソッドが `false` ならば、ローディング画面を表示する仕組みにしておくと、
+のちのちプログラムを組み際に、画像の読み込みが必要な場合に、`loadImage` メソッドを呼ぶだけで済むので楽になります。
 
 ```
 ImageLoader.prototype.get = function(name) {
@@ -93,7 +104,9 @@ ImageLoader.prototype.get = function(name) {
 };
 ```
 
-読み込みした画像データを取得するメソッドです。
+`get` メソッドは、`loadImage` メソッドで既に読み込みが完了した画像データを取得するメソッドです。
+取得したデータは、`Image` インスタンスなので、後述しますが Canvas の `drawImage` メソッドに
+そのまま引数として渡すことで、画面上に画像を描画することができます。
 
 ```
 ImageLoader.prototype.remove = function(name) {
@@ -101,8 +114,10 @@ ImageLoader.prototype.remove = function(name) {
 };
 ```
 
-読み込んだ画像を破棄するメソッドです。小さなゲームであれば、画像を破棄する必要はありませんが、
-大きな規模のゲームでは、必要のなくなった画像は破棄しなくては、メモリを大量に消費してしまいます。
+`remove` メソッドは、読み込んだ画像を破棄するメソッドです。小さなゲームであれば、画像を破棄せずに、
+メモリ上に乗せ続けていても、問題にはなりにくいです。
+しかし大きな規模のゲームになると、画像を大量に使うため、必要のなくなった画像は破棄しなくては、
+メモリを大量に消費してしまい、メモリが足りなくてゲームが終了してしまうことが発生してしまいます。
 
 ## スプライト
 
