@@ -1,14 +1,18 @@
 # BGM/SE再生
 
+これまでの項で、シューティングゲームのゲームシステムに必要な最低限の実装は一通り紹介しました。
+本項では、さらにBGM や SE の再生について解説します。
+
 Web上での音声の再生は、HTML5 Audio を使う方法と、Web Audio を使う方法の二種類が存在します。
 
-HTML5 Audio は、いわゆる<audio>タグを作成し、それを利用して、再生します。
-簡単に音声が再生できる代わりに、細かい制御ができません。
+HTML5 Audio は、いわゆる`<audio>`タグを生成し、それを利用して、再生します。
+簡単に音声が再生できる代わりに、再生の細かい制御ができません。
 
-Web Audio は、JavaScript の API です。細かい制御ができる代わりに、
-知らなければならないことが増えます。
+Web Audio は、JavaScript から利用する API です。細かい制御ができる代わりに、
+制御に必要な細かい概念を知らなければなりません。
 
 # HTML5 Audio
+
 ```
 var element = new Audio();
 element.addEventListener('canplay', function(e) {
@@ -23,8 +27,8 @@ element.pause(); // 再生の停止
 element.play(); // 再生の停止
 ```
 
-HTML5 Audio の使い方は上記のようになります。
-ブラウザの種類にもよりますが、mp3 や wav, ogg, m4a 等が再生できます。
+HTML5 Audio の使い方は上記のようになります。`Audio` インスタンスを作成し、`play` メソッドで再生します。
+再生できるフォーマットは、ブラウザの種類にもよりますが、mp3 や wav, ogg, m4a 等が再生できます。
 
 HTML5 Audio は非常に簡単に音声ファイルの再生を行うことができますが、
 BGMのループの開始位置／終了位置を指定することができません。
@@ -33,6 +37,7 @@ BGMのループの開始位置／終了位置を指定することができま�
 BGMやSEを再生したいと思います。
 
 # Web Audio
+
 ```
 // context 作成
 var audio_context = new AudioContext();
@@ -83,8 +88,11 @@ request.onload = function () {
 };
 ```
 
+Web Audio の使い方は上記のようになります。
+
 ## 流れ
-ゲームにおいて Web Audio を使用する際の基本的な流れです。
+
+ゲームにおいて Web Audio を使用する際の基本的な流れは以下になります。
 オーディオデータの加工やミキシング等を行うには
 より複雑な流れが必要ですが、BGMの再生やSEの再生程度であれば、
 下記の流れで充分です。
@@ -103,10 +111,10 @@ Web Audioで何かする前に、まずコンテクストを作成する必要�
 コンテキストはオーディオ処理やデコードを行うノードの作成を制御します。
 (ノードについては後ほど説明します。)
 
-コンテクストには、AudioContext(リアルタイムレンダリング)とOfflineAudioContext(オフラインレンダリング)が存在しますが、
-ゲームにおいては、AudioContext を使います。
+コンテクストには、`AudioContext`(リアルタイムレンダリング)と`OfflineAudioContext`(オフラインレンダリング)が存在しますが、
+ゲームにおいては、`AudioContext` を使います。
 
-AudioContext インスタンスからは以下のノードを作ることができます。
+`AudioContext` インスタンスからは以下のノードを作ることができます。
 
 - AudioBufferSourceNode
  - GainNode
@@ -125,7 +133,7 @@ AudioContext インスタンスからは以下のノードを作ることがで�
  - DynamicsCompressorNode
  - OscillatorNode
 
-たくさんの種類がありますが、ゲームで主に使うのは、GainNode と AudioBufferSourceNode くらいです。
+たくさんの種類がありますが、ゲームで主に使うのは、`GainNode` と `AudioBufferSourceNode` くらいです。
 この2つについては、ノードの項で説明します。
 
 ## ノード
@@ -138,19 +146,21 @@ AudioContext インスタンスからは以下のノードを作ることがで�
 一つのノードに対して複数のノードの出力／入力を接続することもできます。
 接続されたノードの数はチャンネル数と呼ばれ、チャンネル数はノードの種類によって最大数がある場合もあります。
 
+ゲームで主に使うのは、`GainNode` と `AudioBufferSourceNode`、`AudioDestinationNode` です。
+それぞれ、以下の役割があります。
 
-ゲームで主に使うのは、GainNode と AudioBufferSourceNode、AudioDestinationNode です。
  - AudioBufferSourceNode はオーディオデータのバイナリを出力します。
  - GainNode は音量調整を行うノードです。
  - AudioDestinationNode はオーディオの最終的な出口です。
 
 ## モジュラールーティング
-![](./image/source_gain_destination.png)
+![](./image/source_gain_destination.png)  
+*Web Audio API の基礎(https://www.html5rocks.com/ja/tutorials/webaudio/intro/) より引用*
 
 ノードの項目でも説明しましたが、ノードは入力と出力を持ち、
 あるノードの出力と、別のノードの入力を接続することができます。
 
-今回は、ゲームにおける Web Audio の使用なので、以下のような
+今回は、ゲームにおいて Web Audio を使用するので、以下のような
 ノードの接続の仕方をすることにします。
 
 AudioBufferSourceNode -> GainNode -> AudioDestinationNode
@@ -161,13 +171,13 @@ AudioBufferSourceNode -> GainNode -> AudioDestinationNode
 var source = audio_context.createBufferSource();
 ```
 
-source は AudioBufferSourceNode インスタンスです。入力を持たず出力を持ちます。
+`source` は `AudioBufferSourceNode` インスタンスです。入力を持たず出力を持ちます。
 
 ```
 source.buffer = buffer;
 ```
 
-AudioContext.decodeAudioData により PCMデータに変換したオーディオデータを代入します。
+`AudioContext.decodeAudioData` メソッドにより PCMデータに変換したオーディオデータを代入します。
 
 ```
 source.loop = true;
@@ -176,10 +186,10 @@ source.loopEnd = 10.55;
 source.connect(audio_gain);
 ```
 
-AudioBufferSourceNode インスタンスには、ループの再生や、ループ再生の開始／終了位置を設定することができます。
+`AudioBufferSourceNode` インスタンスには、ループの再生や、ループ再生の開始／終了位置を設定することができます。
 
-AudioBufferSourceNode インスタンスは使い捨てです。一度あるBGMやSEの再生に使用した後、
-別のBGMやSEの再生に使用することはできません。BGMやSEの再生のたびに AudioBufferSourceNode インスタンスを
+`AudioBufferSourceNode` インスタンスは使い捨てです。一度あるBGMやSEの再生に使用した後、
+別のBGMやSEの再生に使用することはできません。BGMやSEの再生のたびに `AudioBufferSourceNode` インスタンスを
 生成することになります。
 
 ```
@@ -187,20 +197,18 @@ var audio_gain = audio_context.createGain();
 audio_gain.gain.value = 1.0; // 音量を 1.0 に設定
 ```
 
-audio_gain は GainNode インスタンスです。入力と出力を持ちます。
+`audio_gain` は `GainNode` インスタンスです。入力と出力を持ちます。
 入力されたデータの音量調整を行う加工を行い、それを出力します。
 
-GainNode は一つのインスタンスを使いまわして、複数のBGMやSEを再生しても構いませんが、
+`GainNode` は一つのインスタンスを使いまわして、複数のBGMやSEを再生しても構いませんが、
 音量調整やフェードイン／フェードアウト設定をいちいちリセットしなくてはならないため、
 再生のたびに新しくインスタンスを生成することをオススメします。
-
-
 
 ```
 audio_context.destination
 ```
 
-destination はAudioDestinationNode インスタンスです。出力を持たず入力を持ちます。
+`destination` は `AudioDestinationNode` インスタンスです。出力を持たず入力を持ちます。
 オーディオの最終的な出力先です。
 
 ```
@@ -211,7 +219,7 @@ source.connect(audio_gain);
 audio_gain.connect(audio_context.destination);
 ```
 
-各ノードのインスタンスが持つ connect メソッドにより、各ノードの入力と出力を接続することができます。
+各ノードのインスタンスが持つ `connect` メソッドにより、各ノードの入力と出力を接続することができます。
 
 ```
 // 再生開始
@@ -220,18 +228,20 @@ source.start(0);
 // 再生停止
 source.stop(0);
 ```
-AudioBufferSourceNode インスタンスの start, stop メソッドにより、再生の開始／停止ができます。
-(AudioDestinationNode ではなく、AudioBufferSourceNode です。)
+
+`AudioBufferSourceNode` インスタンスの `start`, `stop` メソッドにより、再生の開始／停止ができます。
+(`AudioDestinationNode` ではなく、`AudioBufferSourceNode` です。)
 
 引数の 0 は、今すぐ再生するという意味です。N秒後に再生したい場合、引数に開始時刻を渡します。
 
-## i0S端末での再生
+## iOS端末での再生
+
 iOS ではユーザーのアクション契機でないとオーディオを再生できません。
 一度ユーザーのアクション契機で再生すれば、以降はユーザーのアクション契機でなくとも
 オーディオを再生することができます。
 
 よって、iOS向けの端末でのゲームでは、ユーザーの最初のタッチ時に
-無音のオーディオを再生しておくと便利です。
+無音のオーディオを再生する処理をすると便利です。
 
 ```
 var unlocked = false;
@@ -245,9 +255,11 @@ document.addEventListener('touchstart', function() {
 };
 ```
 
-
-
 ## 音声の読み込み
+
+それでは、Web Audio でのオーディオデータの再生について解説しましたので、
+いよいよそれを使って、ゲーム内で BGM や SEを再生する仕組みを整えていきたいと思います。
+
 `src/asset_loader/audio.js`
 ```
 var AudioLoader = function(game) {
@@ -385,6 +397,8 @@ AudioLoader.prototype.remove = function(name) {
 module.exports = AudioLoader;
 ```
 
+上記が、`AudioLoader` クラスの全容です。それではまた少しずつ解説していきたいと思います。
+
 ```
 // SE の再生
 AudioLoader.prototype.playSE = function(name) {
@@ -397,20 +411,21 @@ AudioLoader.prototype.playBGM = function(name) {
 };
 ```
 
-playSE 及び playBGM メソッドを呼び出すことで、オーディオを再生します。
-ただし、メソッドの中身を見てもらえばわかるように、playSE 及び playBGM 内では
+ゲーム内で、`playSE` 及び `playBGM` メソッドを呼び出すことで、オーディオを再生します。
+ただし、メソッドの中身を見てもらえばわかるように、`playSE` 及び `playBGM` 内では
 再生予定のオーディオのフラグを立てているだけです。
 
 これは、1フレーム内に同じオーディオが複数再生される場合に、
 1度しか再生しないようにするためです。例えば、シューティングゲームであれば、
 複数の敵が同時に死ぬ場合がありますが、この際に死んだ敵の回数だけ敵が死ぬ音が再生されると
-音が大きくなるあるいは、再生タイミングによってはそれぞれのSEがそれぞれズレてしまうため、
-このように再生するときは一旦フラグだけ立てて、後述する executePlay メソッドで実際の再生を行います。
+音が大きくなるあるいは、再生タイミングによってはそれぞれの SE がそれぞれズレてしまうため、
+このように再生するときは一旦フラグだけ立てて、後述する `executePlay` メソッドで実際の再生を行います。
 
 ```
 // SE, BGM の再生の実行
 AudioLoader.prototype.executePlay = function() {
 	/* ~ 省略 ~ */
+
 	// BGM の再生
 	if (this.next_play_bgm) {
 		this.playing_bgm_source = this._setupBufferSource(this.next_play_bgm);
@@ -427,11 +442,13 @@ AudioLoader.prototype.executePlay = function() {
 };
 ```
 
-executePlay 関数で、実際にフラグの立っている SE や BGM の再生を行います。
-BGMの再生のときのみ、AudioBufferSourceNode インスタンスを変数に保存しています。
-これは、stopBGM メソッドによって、BGMの再生を後ほど停止できるようにするためです。
+`executePlay` 関数では、`playSE` `playBGM` メソッドによって、
+フラグの立っている SE や BGM の再生を実際に行います。
+BGMの再生のときのみ、`AudioBufferSourceNode` インスタンスを変数に保存しています。
+これは、`stopBGM` メソッドによって、BGMの再生を後ほど停止できるようにするためです。
 
-executePlay メソッドは run 関数内で一度だけ呼び出してください。
+`executePlay` メソッドは `run` 関数内で一度だけ呼び出してください。
+
 ```
 Game.prototype.run = function () {
 	/* ~ 省略 ~ */
@@ -441,9 +458,11 @@ Game.prototype.run = function () {
 
 ## フェードイン／フェードアウト
 
-GainNode インスタンスの gain プロパティに存在する linearRampToValueAtTime メソッドを使用すると、
+ゲームでは、BGMのフェードインやフェードアウトを実装することがあると思います。
+これは、`GainNode` インスタンスの `gain` プロパティに存在する `linearRampToValueAtTime` メソッドを使用すると、
 BGM のフェードイン／フェードアウトを簡単に実装することができます。
 
+`src/asset_loader/audio.js`
 ```
 AudioLoader.prototype.fadeInBGM = function(duration) {
 	var self = this;
@@ -468,8 +487,10 @@ AudioLoader.prototype.fadeOutBGM = function(duration) {
 };
 ```
 
-fadeInBGM あるいは fadeOutBGM を実行することにより、
+ゲーム内から、`AudioLoader` インスタンスの `fadeInBGM` あるいは `fadeOutBGM` を呼び出すことにより、
 現在再生中のBGMをフェードイン／フェードアウトさせることができます。
+
+`fadeInBGM` `fadeOutBGM` メソッドについて少しずつ解説していきたいと思います。
 
 ```
 gain.setValueAtTime(gain.value, startTime);
@@ -487,3 +508,4 @@ gain.linearRampToValueAtTime(0, endTime); // fade out
 第一引数は最終的な音量です。第二引数に、いつまでにその最終的な音量まで減らす／増やすのかを設定します。
 フェードインであれば、最終的な値は 1 になるので、第一引数に 1 を、フェードアウトならば、最終的な値は 0 になるので、
 第一引数に 0 を指定しています。
+
