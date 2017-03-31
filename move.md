@@ -1,16 +1,23 @@
 # 移動
 
-本稿では、画面内のオブジェクトの移動について書きたいと思います。
+前回までの項で、画面内に敵とショットのオブジェクトを生成するところまで書きました。
+しかし、これらの自機・敵・自機のショットはまだ画面上で動いていません。
+
+本稿では、画面内に存在するオブジェクトの移動について書きたいと思います。
 
 ## キャラ移動
-入力の項目より、プレイヤーのキーボードあるいはゲームパッドから情報を取得できるようになりました。
+入力の項で、プレイヤーのキーボードあるいはゲームパッドから情報を取得できるようになりました。
 それでは、プレイヤーの入力を元に、キャラの移動を実装しようと思います。
-`src/js/chara.js`
+
+`src/object/chara.js`
 ```
 var Constant = require("../constant");
+
+// キャラの移動速度
 var SPEED = 2;
 Character.prototype.run = function(){
 	/* ~ 以上省略 ~ */
+
 	// 自機移動
 	if(this.core.input.isKeyDown(Constant.BUTTON_LEFT)) {
 		this.x -= SPEED;
@@ -44,19 +51,19 @@ Character.prototype.forbidOutOfStage = function(){
 	}
 };
 ```
-
-run メソッド内で、プレイヤーの入力を受け取って、自機のx, y座標を移動させています。
-また、forbidOutOfStage メソッドにより、自機が画面の外に出てしまわないように、
+`Chara` クラスを少し修正しました。`run` メソッド内で、プレイヤーの入力を受け取って、自機の(x, y)座標を移動させています。
+また、`forbidOutOfStage` メソッドにより自機が画面の外に出てしまわないように、
 画面外に出てしまったら、画面内に座標を戻すように修正しています。
 
-## vector
-移動ですが、x, y 座標の加算／減算だけだと、斜め方向の移動等、細かい移動をするには不便です。
-「速度」「角度」を指定することで移動できると便利です。
+## ベクトル移動
+前の実装でキャラの移動について実装しました。(x, y)の加算・減算だけで実現しましたが、
+この方法は、斜め方向の移動等、細かい移動をするには不便です。
+オブジェクトを移動させたい際に、「速度」「角度」を指定することで移動できるようになると便利です。
 
-キャラの移動について実装したので、次は自機が撃つ弾の移動を実装しましょう。
-自機の撃つ弾は、前方向に進んでいきます。
+キャラの移動について実装したので、次は自機が撃つショットの移動を実装しましょう。
+自機の撃つショットは、前方向に進んでいきます。
 
-`src/js/util.js`
+`src/util.js`
 ```
 Util.thetaToRadian = function(theta) {
 	return theta * Math.PI / 180;
@@ -67,14 +74,14 @@ Util.calcMoveX = function(speed, theta) {
 Util.calcMoveY = function(speed, theta) {
 	return speed * Math.cos(Util.thetaToRadian(theta));
 };
-
 ```
 
-`src/js/object/base.js`
+`src/object/base.js`
 ```
 var Util = require("./util");
 var ObjectBase = function (scene) {
 	/* ~以上省略 ~ */
+
 	this.speed = 0;
 	this.theta = 0;
 };
@@ -97,29 +104,26 @@ ObjectBase.prototype.setMove = function(speed, theta) {
 };
 ```
 
-theta はどの方向に向かうかの角度、speed は1フレームにどのくらい進むかの速度です。
+`ObjectBase` クラスを少し修正しました。`ObjectBase` クラスを継承したオブジェクトは、
+`setMove` メソッドに、`speed` と `theta` を指定することで、後はプログラムが自動でそれに応じた移動をしてくれます。
+`theta` はどの方向に向かうかの角度、`speed` は1フレームにどのくらい進むかの速度です。
 
-
-theta はシータと言います。記号では θ と記述します。0 ~ 360 の値を取り、
+`theta` はシータと言います。記号では θ と記述します。0 ~ 360 の値を取り、
 右が 0、下が、90、左が180, 上が 270 となります。(360 は 0 と同じく右です。)
 
-# TODO:
-図(シータの)
+`speed * cos(θ)` を計算すると、θ 方向に `speed` の分だけ移動する際に、x 座標はどのくらい進むのかわかります。
+同じく、`speed * sin(θ)` を計算すると、θ 方向に `speed` の分だけ移動する際に、y 座標はどのくらい進むのかわかります。
 
-speed * cos(θ) を計算すると、θ方向に speed 移動する際に、x 座標はどのくらい進むのかわかります。
-同じく、
-speed * sin(θ) を計算すると、θ方向に speed 移動する際に、y 座標はどのくらい進むのかわかります。
+なお、JavaScript の `sin` `cos` 関数は、θ ではなく、ラジアンを渡さないといけないので、
+`Util.thetaToRadian` 関数により、θ からラジアンに変換しています。
 
-なお、JavaScript の sin cos 関数は、θではなく、ラジアンを渡さないといけないので、
-Util.thetaToRadian 関数により、θからラジアンに変換しています。
+それでは、`setMove` を使って、自機のショットに移動を設定してみたいと思います。
 
-# TODO:
-sin cos 関係の図
-
-`src/js/object/chara.js`
+`src/object/chara.js`
 ```
+// ショットの移動速度
 var SHOT_SPEED = 3;
-var SHOT_THETA = 270; // 前方
+var SHOT_THETA = 270; // 画面前方
 Chara.prototype.update = function () {
 	BaseObject.run.apply(this, arguments); // 親クラスの run を実行
 
@@ -133,30 +137,26 @@ Chara.prototype.update = function () {
 };
 ```
 
-上記のように、キャラクラス内で、ショットを生成する際に、ショットの角度と速度を設定してあげます。
-これで、Zボタンを押すと、自機から弾を発射するようになったと思います。
+`setMove` 関数を使用し、`Chara` クラス内で、ショットを生成する際に、ショットの角度と速度を設定しています。
+これで、Zボタンを押すと、自機から弾が発射され、画面前方に進んでいくようになったと思います。
 
+## 自機狙い
 
-## aimed
+自機狙いなど、オブジェクトがある特定の位置に向かって移動する設定をするにはどうすればいいでしょうか。
+移動自体は、`setMove` に `speed` と `theta` を渡してあげればいいのですが、オブジェクトの位置と、移動先の位置から、
+`speed` と `theta` を計算する必要があります。
 
-自機狙いなど、ある特定の位置に向かって移動するにはどうすればいいでしょうか。
-移動自体は、setMove に speed と theta を渡してあげればいいでしょう。
-
-オブジェクトは、自分の今の位置(x, y)と、移動先の(x, y)座標を元に、
-theta つまりどの角度に移動するのかを計算してあげれば良さそうです。
-
-今回のゲームでは実装しませんが、
-移動先に向かって、移動する実装をしてみます。
-
-`src/js/util.js`
+`src/util.js`
 ```
+/* ~ 以下を追加 ~ */
 Util.radianToTheta = function(radian) {
 	return (radian * 180 / Math.PI) | 0;
 };
 ```
 
-`src/js/object/base.js`
+`src/object/base.js`
 ```
+/* ~ 以下を追加 ~ */
 ObjectBase.prototype.setAimTo = function(x, y) {
 	var ax = x - this.x;
 	var ay = y - this.y;
@@ -166,13 +166,13 @@ ObjectBase.prototype.setAimTo = function(x, y) {
 };
 ```
 
-JavaScript には atan2 関数があるので、これを使うことで、2つの(x, y)座標から、
+JavaScript には `atan2` 関数があるので、これを使うことで、2つの(x, y)座標から、
 どの方向に向かうかの角度を取得することができます。
-ただし、atan2 から返ってきた角度は、ラジアンなので、θに変換する必要があります。
+ただし、`atan2` から返ってきた角度は、ラジアンなので、θに変換する必要があります。
 
 これで例えば、敵を自機に向かって移動させたい場合は、
 
-`src/js/object/enemy.js`
+`src/object/enemy.js`
 ```
 Enemy.prototype.update = function () {
 	/* ~以上省略 ~ */
