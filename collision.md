@@ -113,4 +113,6 @@ if(Math.abs(x1 - x2) <= w1/2 + w2/2 && Math.abs(y1 - y2) <= h1/2 + h2/2) {
 }
 ```
 
-`checkCollisionByRect` メソッドは上記のコードを実装しています。`Rect` は `Rectangle` の略称で、矩形(四角形)の英単語です。
+`checkCollisionByRect` メソッドは上記のコードを実装しています。`Rect` は `Rectangle` の略称で、矩形(四角形)の英単語です。  
+
+<img src="image/illust1.png" align=right>
