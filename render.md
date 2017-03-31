@@ -121,25 +121,27 @@ ImageLoader.prototype.remove = function(name) {
 
 ## スプライト
 
-スプライトとは、複数の画像データを一つの画像ファイルにまとめたものです。同じ画像データでも、複数の画像ファイルを読み込むのと、1つのファイルで読み込んで、プログラム内で分割して使うのとでは、後者の方が読み込み速度が早くなります。
+スプライトとは、複数の画像データを一つの画像ファイルにまとめたものです。同じ画像データでも、複数の画像ファイルをそれぞれ読み込むのと、複数の画像データをまとめた1つのファイルで読み込んで、プログラム内で画像を分割して使うのとでは、後者の方が読み込み速度が早くなります。そのためゲームでは、キャラのアニメーションなどに使用する画像データや、敵の弾の種類は、一つの画像データにまとめることが多いです。
 
-一般的に、キャラのアニメーションなどに使用する画像ファイルや、敵の弾の種類は、一つの画像ファイルにまとめる傾向があります。
+スプライトの使用方法ですが、プログラムでスプライト画像を読み込み、スプライト画像の指定の領域のみを切り取って表示することで使用します。
 
-プログラムでは、スプライト画像を読み込み、指定の領域のみを切り取って表示することで使用します。
-
-それでは、Chara クラスにスプライトを使用して、画像を表示するようにしてみましょう。
-いくつかのスプライト画像の表示に使う定数の追加と、draw メソッドの変更を行います。
-
-# TODO:
-image_loader.loadImage を読み出してない
+それでは、`Chara` クラスにスプライトを使用して、ゲーム上にキャラ画像を表示するようにしてみましょう。
+いくつかのスプライト画像の表示に使う定数の追加と、`draw` メソッドの変更を行います。
 
 **スプライト画像**  
-![早苗](./image/player_sanae.png)
+
+`public/image/chara.png`
+
+キャラのスプライト画像は、本書では用意できなかったので、
+読者の皆様の方でご用意頂けましたらと思います。
+
+フリー素材としては、例えば東方弾幕風向けの素材として、以下があったりします。
 
 http://danmakufu.wiki.fc2.com/wiki/%E7%B4%A0%E6%9D%90%E3%83%AA%E3%83%B3%E3%82%AF
-星蓮船自機ドット絵
-霊夢・魔理沙・早苗の星蓮船風ドット絵
-よりお借りしております。
+
+星蓮船自機ドット絵 霊夢・魔理沙・早苗の星蓮船風ドット絵 等
+
+
 
 `src/object/chara.js`
 ```
@@ -167,11 +169,12 @@ Chara.prototype.draw = function () {
 		// sprite size to show
 		sprite_width,                       sprite_height
 	);
+
 	ctx.restore();
 };
 
 Chara.prototype.spriteName = function(){
-	return "sanae";
+	return "chara";
 };
 Chara.prototype.spriteIndexX = function(){
 	return 0;
@@ -216,45 +219,48 @@ Chara.prototype.draw = function () {
 		// sprite size to show
 		sprite_width,                       sprite_height
 	);
+
 	ctx.restore();
 };
 ``
 
-HTML5 の Canvas API を利用して、スプライトの描画を行っています。
-オブジェクトから Canvas の API を利用するには、`this.core.ctx` を参照します。
-
-# TODO:
-save と restore について書く
-
+`draw` 関数です。オブジェクトから Canvas の API を利用するには、`this.core.ctx` を参照します。`draw` メソッドの中身を解説したいと思います。
 
 ```
 var image = this.core.image_loader.getImage(this.spriteName());
 ```
 
-読み込んだ画像を取得しています。
+先ほど解説した、`ImageLoader` クラスの `getImage` メソッドを使用して、読み込んだ画像のデータを取得しています。画像のデータは、`Image` インスタンスです。
 
 ```
-	ctx.translate(this.x, this.y);
+ctx.translate(this.x, this.y);
 ```
 
-Canvas 上のどこに画像を描画するかを指定しています。
+Canvas 上のどこに画像を描画するかを、(x, y)で指定しています。Canvas API では、(x, y) 座標の開始地点は、左上になります。
+画面の一番左が、x = 0 で、画面の一番上が、y = 0 です。
 
 ```
-	ctx.drawImage(
-		image,
-		// sprite position
-		0,                                  0,
-		// sprite size to get
-		sprite_width,                       sprite_height,
-		// adjust left x, up y because of x and y indicate sprite center.
-		-sprite_width/2,                    -sprite_height/2,
-		// sprite size to show
-		sprite_width,                       sprite_height
-	);
+ctx.drawImage(
+	image,
+	// sprite position
+	0,                                  0,
+	// sprite size to get
+	sprite_width,                       sprite_height,
+	// adjust left x, up y because of x and y indicate sprite center.
+	-sprite_width/2,                    -sprite_height/2,
+	// sprite size to show
+	sprite_width,                       sprite_height
+);
 ```
 
-取得した画像を drawImage 関数を利用して Canvas に描画しています。
-drawImage 関数は、引数に指定した数によって挙動が変わる関数です。今回は引数が9つの使い方をします。
+取得した画像を `drawImage` 関数を利用して Canvas に描画しています。
+`drawImage` 関数は、引数に指定した数によって挙動が変わる関数です。以下の3種類の引数の取り方があります。
+
+ - drawImage(image, dx, dy)
+ - drawImage(image, dx, dy, dw, dh)
+ - drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh)
+
+今回は引数が9つの使い方をします。
 
 第1引数の image には、描画したい画像データを指定します。
 
@@ -263,14 +269,14 @@ drawImage 関数は、引数に指定した数によって挙動が変わる関�
 
 第4引数,第5引数には、Canvas 上のどこに画像を描画するか、x, y 座標で指定します。
 `translate` で指定した描画位置から、相対的に描画位置をずらします。
-これは、`this.x` と `this.y` が指定する画像の位置は、基準を画像の真ん中にするためです。
+これは、`this.x` と `this.y` が指定する画像の位置について、基準を画像の真ん中にするためです。
 
-`translate` で描画位置を指定し、さらに drawImage で描画位置をずらすのは二度手間に見えるかもしれませんが、
+`translate` で描画位置を指定し、さらに `drawImage` で描画位置をずらすのは二度手間に見えるかもしれませんが、
 のちのち、画像の回転を行う上で大切になってきます。また画像の回転の項目で後述します。
 
 ```
 Chara.prototype.spriteName = function(){
-	return "sanae";
+	return "chara";
 };
 Chara.prototype.spriteWidth = function(){
 	return 64;
@@ -280,19 +286,12 @@ Chara.prototype.spriteHeight = function(){
 };
 ```
 
-`spriteName` は読み込んだ画像を表示する定数です。`spriteWidth` `spriteHeight` には、
+`spriteName` は読み込んだ画像名を指定する定数です。`spriteWidth` `spriteHeight` には、
 読み込んだ画像のどこまでを切り取るか、横幅と高さを指定します。
-
-# TODO: 
-ここにスプライトの基準点と、切り取りについて解説した画像を出す
-
-
-
-
 
 ## スプライトアニメーション
 
-先ほど、スプライト画像からスプライトを切り取って表示することを行いました。
+先ほどの項では、スプライト画像から画像データを一部切り取って表示することを行いました。
 これにより自機のキャラ画像が表示されたことかと思います。
 
 さらに自機の画像をアニメーションさせてみたいと思います。
@@ -300,8 +299,8 @@ Chara.prototype.spriteHeight = function(){
 アニメーションの方法は、パラパラ漫画と同じように、
 N秒毎に、表示するスプライトを変更することで行います。
 
-それでは、自機のスプライト画像2種類を、を10フレーム毎に切り替えて、
-アニメーションさせてみましょう。 Chara クラスを変更します。
+それでは、自機のスプライト画像2種類を 10 フレーム毎に切り替えて、
+アニメーションさせてみましょう。 `Chara` クラスを変更します。
 
 
 `src/object/chara.js`
@@ -389,6 +388,7 @@ Chara.prototype.spriteHeight = function(){
 module.exports = Chara;
 ```
 
+あらためて、Chara クラスを修正して全て掲載しました。それでは少しずつ解説していきます。
 
 ```
 var Chara = function (scene) {
@@ -408,7 +408,7 @@ var Chara = function (scene) {
 };
 ```
 
-`this.current_sprite_index` というプロパティを追加しました。これは、
+`this.current_sprite_index`  というプロパティを追加しました。これは、
 現在表示するスプライトがどれかを表します。今回は、スプライト画像が2種類なので、0 か 1 の値を取り、
 また、10フレームごとに変更します。
 
@@ -418,7 +418,8 @@ Chara.prototype.spriteAnimationSpan = function(){
 };
 ```
 
-スプライトを切り替える間隔を定義しています。10 フレームごとに切り替えるので、10を指定しました。
+`spriteAnimationSpan` はスプライトを切り替える間隔を定義しています。
+10 フレームごとに切り替えるので、10を指定しました。
 
 ```
 Chara.prototype.spriteIndices = function(){
@@ -439,7 +440,7 @@ Chara.prototype.spriteIndexY = function(){
 };
 ```
 
-current_sprite_index と spriteIndices を元に、スプライト画像のどの座標を切り取ればいいのかを返します。
+`current_sprite_index` と `spriteIndices` を元に、スプライト画像のどの座標を切り取ればいいのかを返します。
 
 ```
 // 描画
@@ -491,7 +492,7 @@ Chara.prototype.update = function () {
 };
 ```
 
-先述した、表示するスプライトを切り替える処理です。spriteAnimationSpan 毎に、current_sprite_index を +1 しており、
+`update` メソッド内には表示する画像データを切り替える処理を追加しています。`spriteAnimationSpan` で定義されたフレーム数ごとに、`current_sprite_index` を +1 しています。
 また、表示できるスプライトがなくなれば、また最初のスプライトに戻ります。
 
-これで、自機キャラがアニメーションするようになりました。
+これで、自機キャラがアニメーションするようになります。
