@@ -369,3 +369,5 @@ Game.prototype.run = function() {
 
 最後に、`Game` クラスの `run` メソッド内で、`handleGamePad` を呼び出します。
 これで、ゲームプログラムから、ゲームパッドの値を取得することができます。
+
+<img src="image/illust3.png" align=right>
