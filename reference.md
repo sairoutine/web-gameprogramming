@@ -1,14 +1,16 @@
 # 参考文献
-本書を読んで、ゲームを作ることにより興味を持った読者の方におすすめしたい文献です。
 
-HTML5 - Web developer guides | MDN
-https://developer.mozilla.org/en/docs/Web/Guide/HTML/HTML5
+本書の内容の補完として、下記の文献を挙げておきます。
+下記の文献を読むことで、より理解が深まるかと思います。
 
-JavaScript: The Good Parts
-https://www.amazon.co.jp/dp/4873113911
+HTML5 - Web developer guides | MDN  
+https://developer.mozilla.org/en/docs/Web/Guide/HTML/HTML5  
 
-逆引きゲームプログラミング
-https://www.amazon.co.jp/dp/479801169X
+JavaScript: The Good Parts  
+https://www.amazon.co.jp/dp/4873113911  
 
-シューティングゲーム アルゴリズムマニアックス
-https://www.amazon.co.jp/dp/4797359978/
+逆引きゲームプログラミング  
+https://www.amazon.co.jp/dp/479801169X  
+
+シューティングゲーム アルゴリズムマニアックス  
+https://www.amazon.co.jp/dp/4797359978/  
