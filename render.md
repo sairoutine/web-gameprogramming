@@ -222,7 +222,7 @@ Chara.prototype.draw = function () {
 
 	ctx.restore();
 };
-``
+```
 
 `draw` 関数です。オブジェクトから Canvas の API を利用するには、`this.core.ctx` を参照します。`draw` メソッドの中身を解説したいと思います。
 
